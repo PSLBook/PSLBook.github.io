@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Linear Regression | Practical Statistical Learning</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Linear Regression | Practical Statistical Learning" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Linear Regression | Practical Statistical Learning" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="John Marden and Feng Liang" />
+
+
+<meta name="date" content="2022-09-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="intro.html"/>
+<link rel="next" href="variable-selection-and-regularization.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#introduction-to-statistical-learning"><i class="fa fa-check"></i><b>1.1</b> Introduction to Statistical Learning</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="intro.html"><a href="intro.html#types-of-learning-problems"><i class="fa fa-check"></i><b>1.1.1</b> Types of learning problems</a></li>
+<li class="chapter" data-level="1.1.2" data-path="intro.html"><a href="intro.html#challenge-of-supervised-learning"><i class="fa fa-check"></i><b>1.1.2</b> Challenge of supervised learning</a></li>
+<li class="chapter" data-level="1.1.3" data-path="intro.html"><a href="intro.html#curse-of-dimensionality"><i class="fa fa-check"></i><b>1.1.3</b> Curse of dimensionality</a></li>
+<li class="chapter" data-level="1.1.4" data-path="intro.html"><a href="intro.html#a-glimpse-of-learning-theory"><i class="fa fa-check"></i><b>1.1.4</b> A glimpse of learning theory</a></li>
+<li class="chapter" data-level="1.1.5" data-path="intro.html"><a href="intro.html#bias-and-variance-tradeoff"><i class="fa fa-check"></i><b>1.1.5</b> Bias and variance tradeoff</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#least-squares-vs.-nearest-neighbors"><i class="fa fa-check"></i><b>1.2</b> Least squares vs. nearest neighbors</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="intro.html"><a href="intro.html#introduction-to-ls-and-knn"><i class="fa fa-check"></i><b>1.2.1</b> Introduction to LS and kNN</a></li>
+<li class="chapter" data-level="1.2.2" data-path="intro.html"><a href="intro.html#simulation-study-with-r"><i class="fa fa-check"></i><b>1.2.2</b> Simulation study with R</a></li>
+<li class="chapter" data-level="1.2.3" data-path="intro.html"><a href="intro.html#simulation-study-with-python"><i class="fa fa-check"></i><b>1.2.3</b> Simulation study with Python</a></li>
+<li class="chapter" data-level="1.2.4" data-path="intro.html"><a href="intro.html#compute-bayes-rule"><i class="fa fa-check"></i><b>1.2.4</b> Compute Bayes rule</a></li>
+<li class="chapter" data-level="1.2.5" data-path="intro.html"><a href="intro.html#discussion"><i class="fa fa-check"></i><b>1.2.5</b> Discussion</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#good-pred-section"><i class="fa fa-check"></i><b>2.1</b> Good predictions: Squared error loss and in-sample error</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#matrix-section"><i class="fa fa-check"></i><b>2.2</b> Matrices and least-squares estimates</a></li>
+<li class="chapter" data-level="2.3" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#regression-inference"><i class="fa fa-check"></i><b>2.3</b> Regression inference</a></li>
+<li class="chapter" data-level="2.4" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#geometric-interpretation"><i class="fa fa-check"></i><b>2.4</b> Geometric interpretation</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#basic-concepts-in-vector-spaces"><i class="fa fa-check"></i><b>2.4.1</b> Basic concepts in vector spaces</a></li>
+<li class="chapter" data-level="2.4.2" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#ls-and-projection"><i class="fa fa-check"></i><b>2.4.2</b> LS and projection</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#in-sample-prediction"><i class="fa fa-check"></i><b>2.5</b> In-sample prediction</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#practical-issues"><i class="fa fa-check"></i><b>2.6</b> Practical issues</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#using-r"><i class="fa fa-check"></i><b>2.6.1</b> Using R</a></li>
+<li class="chapter" data-level="2.6.2" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#interpret-ls-coefficients"><i class="fa fa-check"></i><b>2.6.2</b> Interpret LS coefficients</a></li>
+<li class="chapter" data-level="2.6.3" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#handle-categorical-variables"><i class="fa fa-check"></i><b>2.6.3</b> Handle categorical variables</a></li>
+<li class="chapter" data-level="2.6.4" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#outliers-and-rank-deficiency"><i class="fa fa-check"></i><b>2.6.4</b> Outliers and rank deficiency</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="variable-selection-and-regularization.html"><a href="variable-selection-and-regularization.html"><i class="fa fa-check"></i><b>3</b> Variable Selection and Regularization</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="variable-selection-and-regularization.html"><a href="variable-selection-and-regularization.html#subset-selection"><i class="fa fa-check"></i><b>3.1</b> Subset selection</a></li>
+<li class="chapter" data-level="3.2" data-path="variable-selection-and-regularization.html"><a href="variable-selection-and-regularization.html#ridge-regression"><i class="fa fa-check"></i><b>3.2</b> Ridge regression</a></li>
+<li class="chapter" data-level="3.3" data-path="variable-selection-and-regularization.html"><a href="variable-selection-and-regularization.html#lasso-regression"><i class="fa fa-check"></i><b>3.3</b> Lasso regression</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="regression-trees.html"><a href="regression-trees.html"><i class="fa fa-check"></i><b>4</b> Regression Trees</a></li>
+<li class="chapter" data-level="5" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html"><i class="fa fa-check"></i><b>5</b> Nonlinear Regression</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#polynomials"><i class="fa fa-check"></i><b>5.1</b> Polynomials</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#model-selection"><i class="fa fa-check"></i><b>5.1.1</b> Model selection</a></li>
+<li class="chapter" data-level="5.1.2" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#using-r-1"><i class="fa fa-check"></i><b>5.1.2</b> Using R</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#regression-splines"><i class="fa fa-check"></i><b>5.2</b> Regression Splines</a></li>
+<li class="chapter" data-level="5.3" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#smoothing-splines"><i class="fa fa-check"></i><b>5.3</b> Smoothing Splines</a></li>
+<li class="chapter" data-level="5.4" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#sinces-and-cosines"><i class="fa fa-check"></i><b>5.4</b> Sinces and cosines</a></li>
+<li class="chapter" data-level="5.5" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#a-glimpse-of-wavelets"><i class="fa fa-check"></i><b>5.5</b> A glimpse of wavelets</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="clustering-analysis.html"><a href="clustering-analysis.html"><i class="fa fa-check"></i><b>6</b> Clustering Analysis</a></li>
+<li class="chapter" data-level="7" data-path="latent-structure-models.html"><a href="latent-structure-models.html"><i class="fa fa-check"></i><b>7</b> Latent Structure Models</a></li>
+<li class="chapter" data-level="8" data-path="more-on-clustering.html"><a href="more-on-clustering.html"><i class="fa fa-check"></i><b>8</b> More on Clustering</a></li>
+<li class="chapter" data-level="9" data-path="distriminant-analysis.html"><a href="distriminant-analysis.html"><i class="fa fa-check"></i><b>9</b> Distriminant Analysis</a></li>
+<li class="chapter" data-level="10" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>10</b> Logistic Regression</a></li>
+<li class="chapter" data-level="11" data-path="support-vector-machines.html"><a href="support-vector-machines.html"><i class="fa fa-check"></i><b>11</b> Support Vector Machines</a></li>
+<li class="chapter" data-level="12" data-path="classification-trees-and-boosting.html"><a href="classification-trees-and-boosting.html"><i class="fa fa-check"></i><b>12</b> Classification Trees and Boosting</a></li>
+<li class="chapter" data-level="13" data-path="recommender-system.html"><a href="recommender-system.html"><i class="fa fa-check"></i><b>13</b> Recommender System</a></li>
+<li class="chapter" data-level="14" data-path="introduction-to-deep-learning.html"><a href="introduction-to-deep-learning.html"><i class="fa fa-check"></i><b>14</b> Introduction to Deep Learning</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Practical Statistical Learning</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="linear-model-chapter" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Linear Regression<a href="linear-model-chapter.html#linear-model-chapter" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>To ease into machine learning, we start with regular linear models. There is one dependent variable, the <span class="math inline">\(y\)</span>, and <span class="math inline">\(p\)</span> explanatory variables, the <span class="math inline">\(x\)</span>’s. The data, or training sample, consists of <span class="math inline">\(n\)</span> independent observations:
+<span class="math display">\[
+(y_1,\mathbf{x}_1), (y_2,\mathbf{x}_2),\ldots,(y_n,\mathbf{x}_n).
+\]</span>
+For individual <span class="math inline">\(i\)</span>, <span class="math inline">\(y_i\)</span> is the value of the one-dimensional dependent variable, and <span class="math inline">\(\mathbf{x}_i = (x_{i1}, x_{i2}, \cdots, x_{ip})^t\)</span> is the <span class="math inline">\(p\times 1\)</span> vector of values for the explanatory variables. Generally, the <span class="math inline">\(y_i\)</span>’s are continuous, but the <span class="math inline">\(x_{ij}\)</span>’s can be anything numerical, e.g., 0-1 indicator variables, or functions of another variable (e.g., <span class="math inline">\(x,x^2,x^3\)</span>).</p>
+<p>The linear model is
+<span class="math display" id="eq:lm3">\[\begin{equation}
+y_i = \beta_0+\beta_1 x_{i1}+\cdots+\beta_p x_{ip}+e_i.
+\tag{2.1}
+\end{equation}\]</span>
+The <span class="math inline">\(\beta_j\)</span>’s are parameters, usually unknown and to be estimated. The <span class="math inline">\(e_i\)</span>’s are the errors or residuals. We will assume that</p>
+<ul>
+<li>The <span class="math inline">\(e_i\)</span>’s are independent (of each other, and of the <span class="math inline">\(\mathbf{x}_i\)</span>’s);</li>
+<li><span class="math inline">\(\mathbb{E} [e_i]=0\)</span> for each <span class="math inline">\(i\)</span>;</li>
+<li><span class="math inline">\(\text{Var}[e_i] = \sigma^2_e\)</span> for each <span class="math inline">\(i\)</span>.</li>
+</ul>
+<p>There is also a good chance we will assume they are normally distributed.</p>
+<p>From STAT424 and 425 (or other courses), you know what to do now: estimate the <span class="math inline">\(\beta_j\)</span>’s and <span class="math inline">\(\sigma^2_e\)</span>, decide which <span class="math inline">\(\beta_j\)</span>’s are significant, do <span class="math inline">\(F\)</span>-tests, look for outliers and other violations of the assumptions, etc.</p>
+<p>Here, we may do much of that, but with the goal of prediction. Suppose <span class="math inline">\((y^*,\mathbf{x}^*)\)</span> is a new point, satisfying the same model and assumptions as above (in particular, being independent of the observed <span class="math inline">\(\mathbf{x}_i\)</span>’s). Once we have the estimates of the <span class="math inline">\(\beta_j\)</span>’s (based on the observed data), we <strong>predict</strong> <span class="math inline">\(y^*\)</span> from <span class="math inline">\(\mathbf{x}^*\)</span> by
+<span class="math display" id="eq:lm4">\[\begin{equation}
+\widehat{y}^* = \widehat{\beta}_0+\widehat\beta_1 x^*_1+\cdots+\widehat\beta_p x^{*}_p.
+\tag{2.2}
+\end{equation}\]</span>
+The prediction is good if <span class="math inline">\(\widehat{y}^{*}\)</span> is close to <span class="math inline">\(y^{*}\)</span>. We do not know <span class="math inline">\(y^{*}\)</span>, but we can hope. But the key point is</p>
+<blockquote>
+<p>The estimates of the parameters are good if they give good predictions. We don’t care if the <span class="math inline">\(\widehat\beta_j\)</span>’s are
+close to the <span class="math inline">\(\beta_j\)</span>’s; we don’t care about unbiasedness or minimum variance or significance. We just care whether
+we get good predictions.</p>
+</blockquote>
+<div id="good-pred-section" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Good predictions: Squared error loss and in-sample error<a href="linear-model-chapter.html#good-pred-section" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We want the predictions to be close to the actual (unobserved) value of the dependent variable, that is, we want <span class="math inline">\(\widehat{y}^{*}\)</span> close to <span class="math inline">\(y^{*}\)</span>. One way to measure closeness is by using squared error:
+<span class="math display">\[
+(y^{*}-\widehat{y}^{*})^2.
+\]</span>
+Because we do not know <span class="math inline">\(y^{*}\)</span> (yet), we might look at the expected value instead:
+<span class="math display">\[
+E[(Y^{*}-\widehat{Y}^{*})^2].
+\]</span>
+But what is that the expected value over? Certainly <span class="math inline">\(Y^{*}\)</span>, but the <span class="math inline">\(Y_i\)</span>’s and <span class="math inline">\(\mathbf{X}_i\)</span>’s in the sample, as well as the <span class="math inline">\(\mathbf{X}^{*}\)</span>, could all be considered random. There is no universal answer, but for our purposes here we will
+assume that the all features <span class="math inline">\(\mathbf{X}\)</span> are fixed, and all the <span class="math inline">\(Y_i\)</span>’s are random, i.e.,
+<span class="math display" id="eq:lm7">\[\begin{equation}
+E[(Y^{*}-\widehat Y^{*})^2 \mid \mathbf{X}_1=\mathbf{x}_1,\ldots,\mathbf{X}_n=\mathbf{x}_n,\mathbf{X}^{*}=\mathbf{x}^{*}].
+\tag{2.3}
+\end{equation}\]</span></p>
+<p>But typically you are creating a predictor for many new <span class="math inline">\(x\)</span>’s, and likely you do not know what they will be. (You don’t know what the next 1000 e-mails you get will be.) A reasonable approach is to assume the new <span class="math inline">\(\mathbf{x}\)</span>’s will look much like the old ones, hence you would look at the errors for <span class="math inline">\(n\)</span> new <span class="math inline">\(\mathbf{x}_i\)</span>’s being the same as the old ones. Thus we would have <span class="math inline">\(n\)</span> new cases, <span class="math inline">\((y_i^{*},\mathbf{x}_i^{*})\)</span>, but where <span class="math inline">\(\mathbf{X}_i^{*}=\mathbf{x}_i\)</span>. The <span class="math inline">\(n\)</span> expected errors are averaged, to obtain what is called the <strong>in-sample error</strong>:
+<span class="math display" id="eq:lm8">\[\begin{equation}
+\text{ERR}_{\text{in}} = \frac{1}{n} \sum_{i=1}^n E[(Y_i^{*}-\widehat Y_i^{*})^2~|~\mathbf{X}_1=\mathbf{x}_1,\ldots,\mathbf{X}_n=\mathbf{x}_n,\mathbf{X}_i^{*}=\mathbf{x}_i^{*}].
+\tag{2.4}
+\end{equation}\]</span>
+In particular situations, you may have a more precise knowledge of what the new <span class="math inline">\(x\)</span>’s would be. By all means, use those values.</p>
+<p>We will drop the conditional part of the notation for simplicity.</p>
+</div>
+<div id="matrix-section" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Matrices and least-squares estimates<a href="linear-model-chapter.html#matrix-section" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Ultimately we want to find estimates of the parameters that yield a low _{}. We’ll start with the least squares estimate, then translate things to matrices. The estimates of the <span class="math inline">\(\beta_j\)</span>’s depends on just the training sample. The
+<strong>least squares</strong> estimate of the parameters are the <span class="math inline">\(\beta_j\)</span>’s that minimize the objective function
+<span class="math display" id="eq:lm9">\[\begin{equation}
+\text{RSS}(\beta_0,\ldots,\beta_p) = \sum_{i=1}^n (y_i-\beta_0- \beta_1 x_{i1}-\cdots- \beta_p x_{ip})^2.
+\tag{2.5}
+\end{equation}\]</span>
+The function is a nice convex function in the <span class="math inline">\(\beta_j\)</span>’s, so setting the derivatives equal to zero and solving will yield the minimum. The derivatives are
+<span class="math display" id="eq:lm10">\[\begin{align}
+\frac{\partial}{\partial \beta_0} \text{RSS} (\beta_0,\ldots,\beta_p) &amp;= -2~\sum_{i=1}^n (y_i-\beta_0-\beta_1 x_{i1}-\cdots-\beta_p x_{ip});\\
+\frac{\partial}{\partial \beta_j} \text{RSS} (\beta_0,\ldots,\beta_p) &amp;= -2~\sum_{i=1}^n x_{ij}(y_i-\beta_0-\beta_1 x_{i1}-\cdots-\beta_p x_{ip}), \quad j\ge1.
+\tag{2.6}
+\end{align}\]</span></p>
+<p>Write the equations in matrix form, starting with
+<span class="math display" id="eq:lm11">\[\begin{equation}
+\begin{pmatrix}
+y_1-\beta_0-\beta_1 x_{11}-\cdots-\beta_p x_{1p}\\
+y_2-\beta_0-\beta_1 x_{21}-\cdots-\beta_p x_{2p}\\
+\vdots\\
+y_n-\beta_0-\beta_1 x_{n1}-\cdots-\beta_p x_{np}
+\end{pmatrix} =
+\begin{pmatrix}
+y_1\\y_2\\\vdots\\y_n
+\end{pmatrix} -
+\begin{pmatrix}
+1&amp;x_{11}&amp;x_{12}&amp;\cdots&amp;x_{1p}\\
+1&amp;x_{21}&amp;x_{22}&amp;\cdots&amp;x_{2p}\\
+\vdots&amp;\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+1&amp;x_{n1}&amp;x_{n2}&amp;\cdots&amp;x_{np}
+\end{pmatrix}
+\begin{pmatrix}
+\beta_0\\\beta_1\\\vdots\\\beta_p
+\end{pmatrix}
+\tag{2.7}
+\end{equation}\]</span>
+which is equal to <span class="math inline">\(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\)</span>. The <span class="math inline">\(n\)</span>-by-<span class="math inline">\((p+1)\)</span> matrix <span class="math inline">\(\mathbf{X}\)</span> is the so-called design matrix.</p>
+<p>Take the two summations in equations <a href="linear-model-chapter.html#eq:lm10">(2.6)</a> (without the <span class="math inline">\(-2\)</span>’s) and set to 0 to get
+<span class="math display" id="eq:lm12">\[\begin{align}
+\begin{pmatrix}1&amp;1&amp;\cdots&amp;1\end{pmatrix}(\mathbf{y}-\mathbf{x}\boldsymbol{\beta})&amp;=0;\\
+\begin{pmatrix}x_{1j}&amp;x_{2j}&amp;\cdots&amp;x_{nj}\end{pmatrix}(\mathbf{y}-\mathbf{x}\boldsymbol{\beta})&amp;=0, \quad j\ge 1.
+\tag{2.8}
+\end{align}\]</span>
+Note that the row vectors in <a href="linear-model-chapter.html#eq:lm12">(2.8)</a> on the left are the <span class="math inline">\((p+1)\)</span> columns of <span class="math inline">\(\mathbf{X}\)</span>, yielding
+<span class="math display" id="eq:lm13">\[\begin{equation}
+\mathbf{X}^t(\mathbf{y}-\mathbf{X}\boldsymbol{\beta}) = 0.
+\tag{2.9}
+\end{equation}\]</span>
+That equation is easily solved:
+<span class="math display" id="eq:lm14">\[\begin{equation}
+\mathbf{X}^t\mathbf{y} = \mathbf{X}^t\mathbf{x}\boldsymbol{\beta}~~\Rightarrow~~\boldsymbol{\beta} = (\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\mathbf{y},
+\tag{2.10}
+\end{equation}\]</span>
+at least if <span class="math inline">\(\mathbf{X}&#39;\mathbf{X}\)</span> is invertible. If it is not invertible, then there will be many solutions. In practice, one can always eliminate some (appropriate) columns of <span class="math inline">\(\mathbf{X}\)</span> to obtain invertibility. Generalized inverses are available, too.</p>
+<p><strong>Summary.</strong> In the linear model
+<span class="math display" id="eq:lm15">\[\begin{equation}
+\mathbf{y} = \mathbf{X} \boldsymbol{\beta} + \mathbf{e},
+\tag{2.11}
+\end{equation}\]</span>
+where
+<span class="math display" id="eq:lm16">\[\begin{equation}
+\boldsymbol{\beta} =
+\begin{pmatrix}
+\beta_0\\\beta_1\\\vdots\\\beta_p
+\end{pmatrix} ~~\text{and}~~
+\mathbf{e} =
+\begin{pmatrix}
+e_1\\e_2\\\vdots\\e_n
+\end{pmatrix},
+\tag{2.12}
+\end{equation}\]</span>
+the least squares estimate of <span class="math inline">\(\boldsymbol{\beta}\)</span>, assuming <span class="math inline">\(\mathbf{X}^t\mathbf{X}\)</span> is invertible, is
+<span class="math display" id="eq:lm17">\[\begin{equation}
+\widehat{\boldsymbol{\beta}}_{LS} = (\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\mathbf{y}.
+\tag{2.13}
+\end{equation}\]</span></p>
+</div>
+<div id="regression-inference" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Regression inference<a href="linear-model-chapter.html#regression-inference" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="geometric-interpretation" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> Geometric interpretation<a href="linear-model-chapter.html#geometric-interpretation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="basic-concepts-in-vector-spaces" class="section level3 hasAnchor" number="2.4.1">
+<h3><span class="header-section-number">2.4.1</span> Basic concepts in vector spaces<a href="linear-model-chapter.html#basic-concepts-in-vector-spaces" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="ls-and-projection" class="section level3 hasAnchor" number="2.4.2">
+<h3><span class="header-section-number">2.4.2</span> LS and projection<a href="linear-model-chapter.html#ls-and-projection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+</div>
+<div id="in-sample-prediction" class="section level2 hasAnchor" number="2.5">
+<h2><span class="header-section-number">2.5</span> In-sample prediction<a href="linear-model-chapter.html#in-sample-prediction" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>When considering the in-sample error for the linear model, we have the same model for the training sample and the new sample:
+<span class="math display" id="eq:predls1">\[\begin{equation}
+\mathbf{Y}=\mathbf{X}\boldsymbol{\beta}+\mathbf{e}~~\mbox{and}~~\mathbf{Y}^{*} = \mathbf{X}\boldsymbol{\beta}+\mathbf{e}^{*}.
+\tag{2.14}
+\end{equation}\]</span>
+The <span class="math inline">\(e_i\)</span>’s and <span class="math inline">\(e^{*}_i\)</span>’s are independent with mean 0 and variance <span class="math inline">\(\sigma^2_e\)</span>. If we use the least-squares estimate of <span class="math inline">\(\boldsymbol{\beta}\)</span> in the prediction, we have
+<span class="math display" id="eq:predls2">\[\begin{equation}
+\widehat{\mathbf{Y}}^{*} = \mathbf{X}\widehat{\boldsymbol{\beta}}_{LS} = \mathbf{X}(\mathbf{X}&#39;\mathbf{X})^{-1}\mathbf{X}&#39;\mathbf{Y} = \mathbf{H}\mathbf{Y},
+\tag{2.15}
+\end{equation}\]</span>
+where <span class="math inline">\(\mathbf{H}\)</span> is the “hat” matrix,
+<span class="math display" id="eq:H">\[\begin{equation}
+\mathbf{H} = \mathbf{X}(\mathbf{X}&#39;\mathbf{X})^{-1}\mathbf{X}&#39;.
+\tag{2.16}
+\end{equation}\]</span>
+Note that this matrix is symmetric and idempotent, which means that
+<span class="math display" id="eq:predls3-1">\[\begin{equation}
+\mathbf{H}^t = \mathbf{H}, \quad
+\mathbf{H}\mathbf{H}=\mathbf{H}.
+\tag{2.17}
+\end{equation}\]</span></p>
+<p>The errors in prediction are the <span class="math inline">\(Y_i^{*} - \widehat Y_i^{*}\)</span>. Before getting to the <span class="math inline">\(\text{ERR}_{\text{in}}\)</span>, consider the mean and covariance’s of these errors. First,
+<span class="math display" id="eq:predls4">\[\begin{equation}
+E[\mathbf{Y}] = E[\mathbf{X}\boldsymbol{\beta}+\mathbf{e}] = \mathbf{X}\boldsymbol{\beta},~~E[\mathbf{Y}^{*}] = E[\mathbf{X}\boldsymbol{\beta}+\mathbf{e}^{*}] = \mathbf{X}\boldsymbol{\beta},
+\tag{2.18}
+\end{equation}\]</span>
+because the expected values of the <span class="math inline">\(e\)</span>’s are all 0 and we are assuming <span class="math inline">\(\mathbf{X}\)</span> is fixed, and
+<span class="math display" id="eq:predls4-1">\[\begin{align}
+E[\widehat {\mathbf{Y}}^{*}] &amp;= E[\mathbf{X}(\mathbf{X}&#39;\mathbf{X})^{-1}\mathbf{X}&#39;\mathbf{Y}]\\
+&amp;= \mathbf{X}(\mathbf{X}&#39;\mathbf{X})^{-1}\mathbf{X}&#39;E[\mathbf{Y}]\\
+&amp;= \mathbf{X}(\mathbf{X}&#39;\mathbf{X})^{-1}\mathbf{X}&#39;\mathbf{X}\boldsymbol{\beta}\\
+&amp;= \mathbf{X}\boldsymbol{\beta},
+\tag{2.19}
+\end{align}\]</span>
+because the <span class="math inline">\(\mathbf{X}&#39;\mathbf{X}\)</span>’s cancel. Thus,
+<span class="math display" id="eq:predls5">\[\begin{equation}
+\mathbb{E}[\mathbf{Y}^{*} - \widehat {\mathbf{Y}}^{*}] = \mathbf{0}_n~~\mbox{(the $n\times 1$ vector of 0&#39;s)}.
+\tag{2.20}
+\end{equation}\]</span>
+This zero means that the errors are <strong>unbiased</strong>. They may be big or small, but on average right on the nose. Unbiasedness is ok, but it is really more important to be close.</p>
+<p>Next, the covariance matrices:
+<span class="math display" id="eq:predls6">\[\begin{equation}
+\text{Cov}[\mathbf{Y}] = \text{Cov}[\mathbf{X}\boldsymbol{\beta}+\mathbf{e}] = \text{Cov}[\mathbf{e}] = \sigma_e^2\mathbf{I}_n~~\mbox{(the $n\times n$ identity matrix)},
+\tag{2.21}
+\end{equation}\]</span>
+because the <span class="math inline">\(e_i\)</span>’s are independent, hence have zero covariance, and all have variance <span class="math inline">\(\sigma^2_e\)</span>.
+Similarly,
+<span class="math display" id="eq:predls7">\[\begin{equation}
+\text{Cov}[\mathbf{Y}^{*}] = \sigma_e^2\mathbf{I}_n.
+\tag{2.22}
+\end{equation}\]</span>
+Less similar,
+<span class="math display" id="eq:predls8">\[\begin{align}
+\text{Cov}[\widehat {\mathbf{Y}}^{*}] &amp;= \text{Cov}[\mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\mathbf{Y}]\\
+&amp;=\mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t \text{Cov}[\mathbf{Y}] \mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\\
+&amp;=\mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t \sigma^2_e\mathbf{I}_n \mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\\
+&amp;=\sigma^2_e\mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\\
+&amp;=\sigma^2_e\mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\\
+&amp;=\sigma^2_e\mathbf{H},
+\tag{2.23}
+\end{align}\]</span>
+the second line following from <a href="linear-model-chapter.html#eq:H">(2.16)</a>.</p>
+<p>Finally, for the errors, note that <span class="math inline">\(\mathbf{Y}^{*}\)</span> and <span class="math inline">\(\widehat{\mathbf{Y}}^{*}\)</span> are independent, because the latter depends on the training sample alone. Hence,
+<span class="math display" id="eq:predls9">\[\begin{align}
+\text{Cov}[\mathbf{Y}^{*} - \widehat {\mathbf{Y}}^{*}] &amp;= \text{Cov}[\mathbf{Y}^{*}] +Cov[\widehat {\mathbf{Y}}^{*}] ~~\mbox{(notice the $+$)}\\
+&amp;=\sigma^2_e\mathbf{I}_n+\sigma^2_e\mathbf{H}\\
+&amp;=\sigma^2_e(\mathbf{I}_n+\mathbf{H}).
+\tag{2.24}
+\end{align}\]</span></p>
+<p>Now,
+<span class="math display" id="eq:predls10">\[\begin{align}
+n \cdot \text{ERR}_{\text{in}} &amp;= \mathbb{E} [\|\mathbf{Y}^{*} - \widehat {\mathbf{Y}}^{*}\|^2]\\
+&amp;=\|\mathbb{E} \mathbf{Y}^{*} - \mathbb{E} \widehat {\mathbf{Y}}^{*} \|^2+ \text{tr}(\text{Cov}[\mathbf{Y}^{*} - \widehat {\mathbf{Y}}^{*}])\\
+&amp;=\text{tr} (\sigma^2_e(\mathbf{I}_n+\mathbf{H}))\\
+&amp;=\sigma^2_e(n+ \text{tr}(\mathbf{H})).
+\tag{2.25}
+\end{align}\]</span>
+The third line follows from <a href="linear-model-chapter.html#eq:predls9">(2.24)</a> and <a href="linear-model-chapter.html#eq:predls5">(2.20)</a>, and the second from the following result: for any random vector <span class="math inline">\(\mathbf{Z}\)</span>
+<span class="math display" id="eq:cov8">\[\begin{align}
+\mathbb{E} [\|\mathbf{Z} \|^2] &amp;= \mathbb{E} [Z_1^2+\cdots+Z_m^2]\\
+&amp;= \mathbb{E}[Z_1^2]+\cdots+\mathbb{E}[Z_m^2] \\
+&amp;= \mathbb{E}[Z_1]^2+\text{Var}[Z_1]^2+\cdots+\mathbb{E} [Z_m]^2+ \text{Var}[Z_m]^2\\
+&amp;= \|\mathbb{E} \mathbf{Z}\|^2 + \text{tr}(\text{Cov}[\mathbf{Z}]),
+\tag{2.26}
+\end{align}\]</span>
+where the trace of a matrix is the sum of the diagonals, which in the case of a
+covariance matrix are the variances.</p>
+<p>For the trace, recall that <span class="math inline">\(\mathbf{X}\)</span> is <span class="math inline">\(n\times(p+1)\)</span>, so that
+<span class="math display" id="eq:predls11">\[\begin{align}
+\text{tr}(\mathbf{H}) &amp;= \text{tr}(\mathbf{X}(\mathbf{X}&#39;\mathbf{X})^{-1}\mathbf{X}&#39;) \\
+&amp;= \text{tr}((\mathbf{X}&#39;\mathbf{X})^{-1}\mathbf{X}&#39;\mathbf{X}) \\
+&amp;= \text{tr}(\mathbf{I}_{p+1})=p+1.
+\tag{2.27}
+\end{align}\]</span>
+Putting that answer in <a href="linear-model-chapter.html#eq:predls10">(2.25)</a> we obtain
+<span class="math display" id="eq:predls12">\[\begin{equation}
+\text{ERR}_{\text{in}} = \sigma^2_e + \sigma^2_e \frac{p+1}{n}.
+\tag{2.28}
+\end{equation}\]</span></p>
+<p>This expected in-sample error is a simple function of three quantities. We will use it as a benchmark. The goal in the rest
+of this section will be to find, if possible, predictors that have lower in-sample error.</p>
+<p>There’s not much we can do about <span class="math inline">\(\sigma^2_e\)</span>,
+since it is the inherent variance of the observations. Taking a bigger training sample will decrease the error,
+as one would expect. The one part we can work with is the <span class="math inline">\(p\)</span>, that is, try to reduce <span class="math inline">\(p\)</span> by eliminating some of the
+explanatory variables. Will that strategy work? It is the subject of the next chapter.</p>
+</div>
+<div id="practical-issues" class="section level2 hasAnchor" number="2.6">
+<h2><span class="header-section-number">2.6</span> Practical issues<a href="linear-model-chapter.html#practical-issues" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="using-r" class="section level3 hasAnchor" number="2.6.1">
+<h3><span class="header-section-number">2.6.1</span> Using R<a href="linear-model-chapter.html#using-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="interpret-ls-coefficients" class="section level3 hasAnchor" number="2.6.2">
+<h3><span class="header-section-number">2.6.2</span> Interpret LS coefficients<a href="linear-model-chapter.html#interpret-ls-coefficients" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="handle-categorical-variables" class="section level3 hasAnchor" number="2.6.3">
+<h3><span class="header-section-number">2.6.3</span> Handle categorical variables<a href="linear-model-chapter.html#handle-categorical-variables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="outliers-and-rank-deficiency" class="section level3 hasAnchor" number="2.6.4">
+<h3><span class="header-section-number">2.6.4</span> Outliers and rank deficiency<a href="linear-model-chapter.html#outliers-and-rank-deficiency" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="variable-selection-and-regularization.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/02-linear-regression.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

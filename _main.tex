@@ -1,0 +1,701 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{book}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{booktabs}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage[]{natbib}
+\bibliographystyle{plainnat}
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Practical Statistical Learning},
+  pdfauthor={John Marden and Feng Liang},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Practical Statistical Learning}
+\author{John Marden and Feng Liang}
+\date{2022-09-22}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{1}
+\tableofcontents
+}
+\hypertarget{preface}{%
+\chapter*{Preface}\label{preface}}
+\addcontentsline{toc}{chapter}{Preface}
+
+These notes are based on a course in statistical learning developed by John Marden and Feng Liang at UIUC using the text \textbf{The Elements of Statistical Learning} by Hastie, Tibshirani and Friedman \url{https://hastie.su.domains/ElemStatLearn/}.
+
+\hypertarget{intro}{%
+\chapter{Introduction}\label{intro}}
+
+\textbf{Notes}
+{[}\href{https://liangfgithub.github.io/Notes/lec_W1.1_Introduction_Statistical_Learning.pdf}{lec\_W1.1\_Introduction\_Statistical\_Learning.pdf}{]}
+{[}\href{https://liangfgithub.github.io/Notes/lec_W1.2_kNN_vs_LinearRegression.pdf}{lec\_W1.2\_kNN\_vs\_LinearRegression.pdf}{]}
+{[}\href{https://liangfgithub.github.io/Notes/lec_W1.2_kNN_vs_LinearRegression_figs.pdf}{lec\_W1.2\_kNN\_vs\_LinearRegression\_figs.pdf}{]}
+{[}\href{https://liangfgithub.github.io/Notes/lec_W1.3_Introduction_LearningTheory.pdf}{lec\_W1.3\_Introduction\_LearningTheory.pdf}{]}
+
+\textbf{R/Python Code:}
+{[}\href{https://liangfgithub.github.io/Rcode_W1_SimulationStudy.html}{Rcode\_W1\_SimulationStudy.html}{]}
+{[}\href{https://liangfgithub.github.io/Rcode_W1_Examples_from_ESL.html}{Rcode\_W1\_Examples\_from\_ESL.html}{]}
+{[}\href{https://liangfgithub.github.io/Python_W1_SimulationStudy.html}{Python\_W1\_SimulationStudy.html}{]}
+
+\hypertarget{introduction-to-statistical-learning}{%
+\section{Introduction to Statistical Learning}\label{introduction-to-statistical-learning}}
+
+What is machine learning?
+
+\begin{quote}
+In artificial intelligence, machine learning involves some kind of
+machine (robot, computer) that modifies its behavior based on experience. For example, if a robot falls down every time it comes to a stairway, it will learn to avoid stairways. E-mail programs often learn to distinguish spam from regular e-mail. In statistics, machine learning uses statistical data to learn.
+\end{quote}
+
+What is data mining?
+
+\begin{quote}
+Looking for relationships in large data sets. Observations are ``baskets'' of items. The goal is to see what items are associated with other items, or which items' presence implies the presence of other items. For example, at Walmart, one may realize that people who buy socks also buy beer. Then Walmart would be smart to put some beer cases near the socks, or vice versa. Or if the government is spying on everyone's e-mails, certain words (which I better not say) found together might cause the writer to be sent to Guantanamo.
+\end{quote}
+
+The \textbf{difference} for a statistician between supervised machine learning and regular data analysis is that in machine learning, the statistician does not care about the estimates of parameters nor hypothesis tests nor which models fit best. Rather, the focus is on finding some function that does a good job of predicting \(y\) from \(x\). Estimating parameters, fitting models, etc., may indeed be important parts of developing the function, but they are not the objective.
+
+\hypertarget{types-of-learning-problems}{%
+\subsection{Types of learning problems}\label{types-of-learning-problems}}
+
+Generally, there are two categories:
+
+\begin{itemize}
+\item
+  \textbf{Supervised learning} data consists of example \((y,x)\)'s, the training data. The machine is a function built based on the data that takes in a new \(x\), and produces a guess of the corresponding \(y\). It is
+
+  \begin{itemize}
+  \item
+    \textbf{regression} if the \(y\)'s are continuous, and
+  \item
+    \textbf{classification} or \textbf{categorization} if the \(y\)'s are categories.
+  \end{itemize}
+\item
+  \textbf{Unsupervised learning} is \textbf{clustering}. The data consists of example \(x\)'s, and the machine is a function that groups the \(x\)'s into clusters.
+\end{itemize}
+
+\hypertarget{challenge-of-supervised-learning}{%
+\subsection{Challenge of supervised learning}\label{challenge-of-supervised-learning}}
+
+\hypertarget{curse-of-dimensionality}{%
+\subsection{Curse of dimensionality}\label{curse-of-dimensionality}}
+
+\hypertarget{a-glimpse-of-learning-theory}{%
+\subsection{A glimpse of learning theory}\label{a-glimpse-of-learning-theory}}
+
+\hypertarget{bias-and-variance-tradeoff}{%
+\subsection{Bias and variance tradeoff}\label{bias-and-variance-tradeoff}}
+
+\hypertarget{least-squares-vs.-nearest-neighbors}{%
+\section{Least squares vs.~nearest neighbors}\label{least-squares-vs.-nearest-neighbors}}
+
+\hypertarget{introduction-to-ls-and-knn}{%
+\subsection{Introduction to LS and kNN}\label{introduction-to-ls-and-knn}}
+
+\hypertarget{simulation-study-with-r}{%
+\subsection{Simulation study with R}\label{simulation-study-with-r}}
+
+\hypertarget{simulation-study-with-python}{%
+\subsection{Simulation study with Python}\label{simulation-study-with-python}}
+
+\hypertarget{compute-bayes-rule}{%
+\subsection{Compute Bayes rule}\label{compute-bayes-rule}}
+
+\hypertarget{discussion}{%
+\subsection{Discussion}\label{discussion}}
+
+\hypertarget{linear-model-chapter}{%
+\chapter{Linear Regression}\label{linear-model-chapter}}
+
+To ease into machine learning, we start with regular linear models. There is one dependent variable, the \(y\), and \(p\) explanatory variables, the \(x\)'s. The data, or training sample, consists of \(n\) independent observations:
+\[
+(y_1,\mathbf{x}_1), (y_2,\mathbf{x}_2),\ldots,(y_n,\mathbf{x}_n).
+\]
+For individual \(i\), \(y_i\) is the value of the one-dimensional dependent variable, and \(\mathbf{x}_i = (x_{i1}, x_{i2}, \cdots, x_{ip})^t\) is the \(p\times 1\) vector of values for the explanatory variables. Generally, the \(y_i\)'s are continuous, but the \(x_{ij}\)'s can be anything numerical, e.g., 0-1 indicator variables, or functions of another variable (e.g., \(x,x^2,x^3\)).
+
+The linear model is
+\begin{equation}
+y_i = \beta_0+\beta_1 x_{i1}+\cdots+\beta_p x_{ip}+e_i.
+\label{eq:lm3}
+\end{equation}
+The \(\beta_j\)'s are parameters, usually unknown and to be estimated. The \(e_i\)'s are the errors or residuals. We will assume that
+
+\begin{itemize}
+\tightlist
+\item
+  The \(e_i\)'s are independent (of each other, and of the \(\mathbf{x}_i\)'s);
+\item
+  \(\mathbb{E} [e_i]=0\) for each \(i\);
+\item
+  \(\text{Var}[e_i] = \sigma^2_e\) for each \(i\).
+\end{itemize}
+
+There is also a good chance we will assume they are normally distributed.
+
+From STAT424 and 425 (or other courses), you know what to do now: estimate the \(\beta_j\)'s and \(\sigma^2_e\), decide which \(\beta_j\)'s are significant, do \(F\)-tests, look for outliers and other violations of the assumptions, etc.
+
+Here, we may do much of that, but with the goal of prediction. Suppose \((y^*,\mathbf{x}^*)\) is a new point, satisfying the same model and assumptions as above (in particular, being independent of the observed \(\mathbf{x}_i\)'s). Once we have the estimates of the \(\beta_j\)'s (based on the observed data), we \textbf{predict} \(y^*\) from \(\mathbf{x}^*\) by
+\begin{equation}
+\widehat{y}^* = \widehat{\beta}_0+\widehat\beta_1 x^*_1+\cdots+\widehat\beta_p x^{*}_p.
+\label{eq:lm4}
+\end{equation}
+The prediction is good if \(\widehat{y}^{*}\) is close to \(y^{*}\). We do not know \(y^{*}\), but we can hope. But the key point is
+
+\begin{quote}
+The estimates of the parameters are good if they give good predictions. We don't care if the \(\widehat\beta_j\)'s are
+close to the \(\beta_j\)'s; we don't care about unbiasedness or minimum variance or significance. We just care whether
+we get good predictions.
+\end{quote}
+
+\hypertarget{good-pred-section}{%
+\section{Good predictions: Squared error loss and in-sample error}\label{good-pred-section}}
+
+We want the predictions to be close to the actual (unobserved) value of the dependent variable, that is, we want \(\widehat{y}^{*}\) close to \(y^{*}\). One way to measure closeness is by using squared error:
+\[
+(y^{*}-\widehat{y}^{*})^2.
+\]
+Because we do not know \(y^{*}\) (yet), we might look at the expected value instead:
+\[
+E[(Y^{*}-\widehat{Y}^{*})^2].
+\]
+But what is that the expected value over? Certainly \(Y^{*}\), but the \(Y_i\)'s and \(\mathbf{X}_i\)'s in the sample, as well as the \(\mathbf{X}^{*}\), could all be considered random. There is no universal answer, but for our purposes here we will
+assume that the all features \(\mathbf{X}\) are fixed, and all the \(Y_i\)'s are random, i.e.,
+\begin{equation}
+E[(Y^{*}-\widehat Y^{*})^2 \mid \mathbf{X}_1=\mathbf{x}_1,\ldots,\mathbf{X}_n=\mathbf{x}_n,\mathbf{X}^{*}=\mathbf{x}^{*}].
+\label{eq:lm7}
+\end{equation}
+
+But typically you are creating a predictor for many new \(x\)'s, and likely you do not know what they will be. (You don't know what the next 1000 e-mails you get will be.) A reasonable approach is to assume the new \(\mathbf{x}\)'s will look much like the old ones, hence you would look at the errors for \(n\) new \(\mathbf{x}_i\)'s being the same as the old ones. Thus we would have \(n\) new cases, \((y_i^{*},\mathbf{x}_i^{*})\), but where \(\mathbf{X}_i^{*}=\mathbf{x}_i\). The \(n\) expected errors are averaged, to obtain what is called the \textbf{in-sample error}:
+\begin{equation}
+\text{ERR}_{\text{in}} = \frac{1}{n} \sum_{i=1}^n E[(Y_i^{*}-\widehat Y_i^{*})^2~|~\mathbf{X}_1=\mathbf{x}_1,\ldots,\mathbf{X}_n=\mathbf{x}_n,\mathbf{X}_i^{*}=\mathbf{x}_i^{*}].
+\label{eq:lm8}
+\end{equation}
+In particular situations, you may have a more precise knowledge of what the new \(x\)'s would be. By all means, use those values.
+
+We will drop the conditional part of the notation for simplicity.
+
+\hypertarget{matrix-section}{%
+\section{Matrices and least-squares estimates}\label{matrix-section}}
+
+Ultimately we want to find estimates of the parameters that yield a low \text{ERR}\_\{\text{in}\}. We'll start with the least squares estimate, then translate things to matrices. The estimates of the \(\beta_j\)'s depends on just the training sample. The
+\textbf{least squares} estimate of the parameters are the \(\beta_j\)'s that minimize the objective function
+\begin{equation}
+\text{RSS}(\beta_0,\ldots,\beta_p) = \sum_{i=1}^n (y_i-\beta_0- \beta_1 x_{i1}-\cdots- \beta_p x_{ip})^2.
+\label{eq:lm9}
+\end{equation}
+The function is a nice convex function in the \(\beta_j\)'s, so setting the derivatives equal to zero and solving will yield the minimum. The derivatives are
+\begin{align}
+\frac{\partial}{\partial \beta_0} \text{RSS} (\beta_0,\ldots,\beta_p) &= -2~\sum_{i=1}^n (y_i-\beta_0-\beta_1 x_{i1}-\cdots-\beta_p x_{ip});\\
+\frac{\partial}{\partial \beta_j} \text{RSS} (\beta_0,\ldots,\beta_p) &= -2~\sum_{i=1}^n x_{ij}(y_i-\beta_0-\beta_1 x_{i1}-\cdots-\beta_p x_{ip}), \quad j\ge1.
+\label{eq:lm10}
+\end{align}
+
+Write the equations in matrix form, starting with
+\begin{equation}
+\begin{pmatrix}
+y_1-\beta_0-\beta_1 x_{11}-\cdots-\beta_p x_{1p}\\
+y_2-\beta_0-\beta_1 x_{21}-\cdots-\beta_p x_{2p}\\
+\vdots\\
+y_n-\beta_0-\beta_1 x_{n1}-\cdots-\beta_p x_{np}
+\end{pmatrix} =
+\begin{pmatrix}
+y_1\\y_2\\\vdots\\y_n
+\end{pmatrix} - 
+\begin{pmatrix}
+1&x_{11}&x_{12}&\cdots&x_{1p}\\
+1&x_{21}&x_{22}&\cdots&x_{2p}\\
+\vdots&\vdots&\vdots&\ddots&\vdots\\
+1&x_{n1}&x_{n2}&\cdots&x_{np}
+\end{pmatrix}
+\begin{pmatrix}
+\beta_0\\\beta_1\\\vdots\\\beta_p
+\end{pmatrix} 
+\label{eq:lm11}
+\end{equation}
+which is equal to \(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\). The \(n\)-by-\((p+1)\) matrix \(\mathbf{X}\) is the so-called design matrix.
+
+Take the two summations in equations \eqref{eq:lm10} (without the \(-2\)'s) and set to 0 to get
+\begin{align}
+\begin{pmatrix}1&1&\cdots&1\end{pmatrix}(\mathbf{y}-\mathbf{x}\boldsymbol{\beta})&=0;\\
+\begin{pmatrix}x_{1j}&x_{2j}&\cdots&x_{nj}\end{pmatrix}(\mathbf{y}-\mathbf{x}\boldsymbol{\beta})&=0, \quad j\ge 1.
+\label{eq:lm12}
+\end{align}
+Note that the row vectors in \eqref{eq:lm12} on the left are the \((p+1)\) columns of \(\mathbf{X}\), yielding
+\begin{equation}
+\mathbf{X}^t(\mathbf{y}-\mathbf{X}\boldsymbol{\beta}) = 0.
+\label{eq:lm13}
+\end{equation}
+That equation is easily solved:
+\begin{equation}
+\mathbf{X}^t\mathbf{y} = \mathbf{X}^t\mathbf{x}\boldsymbol{\beta}~~\Rightarrow~~\boldsymbol{\beta} = (\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\mathbf{y},
+\label{eq:lm14}
+\end{equation}
+at least if \(\mathbf{X}'\mathbf{X}\) is invertible. If it is not invertible, then there will be many solutions. In practice, one can always eliminate some (appropriate) columns of \(\mathbf{X}\) to obtain invertibility. Generalized inverses are available, too.
+
+\textbf{Summary.} In the linear model
+\begin{equation}
+\mathbf{y} = \mathbf{X} \boldsymbol{\beta} + \mathbf{e},
+\label{eq:lm15}
+\end{equation}
+where
+\begin{equation}
+\boldsymbol{\beta} = 
+\begin{pmatrix}
+\beta_0\\\beta_1\\\vdots\\\beta_p
+\end{pmatrix} ~~\text{and}~~
+\mathbf{e} = 
+\begin{pmatrix}
+e_1\\e_2\\\vdots\\e_n
+\end{pmatrix},
+\label{eq:lm16}
+\end{equation}
+the least squares estimate of \(\boldsymbol{\beta}\), assuming \(\mathbf{X}^t\mathbf{X}\) is invertible, is
+\begin{equation}
+\widehat{\boldsymbol{\beta}}_{LS} = (\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\mathbf{y}.
+\label{eq:lm17}
+\end{equation}
+
+\hypertarget{regression-inference}{%
+\section{Regression inference}\label{regression-inference}}
+
+\hypertarget{geometric-interpretation}{%
+\section{Geometric interpretation}\label{geometric-interpretation}}
+
+\hypertarget{basic-concepts-in-vector-spaces}{%
+\subsection{Basic concepts in vector spaces}\label{basic-concepts-in-vector-spaces}}
+
+\hypertarget{ls-and-projection}{%
+\subsection{LS and projection}\label{ls-and-projection}}
+
+\hypertarget{in-sample-prediction}{%
+\section{In-sample prediction}\label{in-sample-prediction}}
+
+When considering the in-sample error for the linear model, we have the same model for the training sample and the new sample:
+\begin{equation}
+\mathbf{Y}=\mathbf{X}\boldsymbol{\beta}+\mathbf{e}~~\mbox{and}~~\mathbf{Y}^{*} = \mathbf{X}\boldsymbol{\beta}+\mathbf{e}^{*}.
+\label{eq:predls1}
+\end{equation}
+The \(e_i\)'s and \(e^{*}_i\)'s are independent with mean 0 and variance \(\sigma^2_e\). If we use the least-squares estimate of \(\boldsymbol{\beta}\) in the prediction, we have
+\begin{equation}
+\widehat{\mathbf{Y}}^{*} = \mathbf{X}\widehat{\boldsymbol{\beta}}_{LS} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y} = \mathbf{H}\mathbf{Y},
+\label{eq:predls2}
+\end{equation}
+where \(\mathbf{H}\) is the ``hat'' matrix,
+\begin{equation} 
+\mathbf{H} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'.
+\label{eq:H}
+\end{equation}
+Note that this matrix is symmetric and idempotent, which means that
+\begin{equation}
+\mathbf{H}^t = \mathbf{H}, \quad 
+\mathbf{H}\mathbf{H}=\mathbf{H}.
+\label{eq:predls3-1}
+\end{equation}
+
+The errors in prediction are the \(Y_i^{*} - \widehat Y_i^{*}\). Before getting to the \(\text{ERR}_{\text{in}}\), consider the mean and covariance's of these errors. First,
+\begin{equation}
+E[\mathbf{Y}] = E[\mathbf{X}\boldsymbol{\beta}+\mathbf{e}] = \mathbf{X}\boldsymbol{\beta},~~E[\mathbf{Y}^{*}] = E[\mathbf{X}\boldsymbol{\beta}+\mathbf{e}^{*}] = \mathbf{X}\boldsymbol{\beta},
+\label{eq:predls4}
+\end{equation}
+because the expected values of the \(e\)'s are all 0 and we are assuming \(\mathbf{X}\) is fixed, and
+\begin{align}
+E[\widehat {\mathbf{Y}}^{*}] &= E[\mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}]\\
+&= \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'E[\mathbf{Y}]\\ 
+&= \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{X}\boldsymbol{\beta}\\ 
+&= \mathbf{X}\boldsymbol{\beta},
+\label{eq:predls4-1}
+\end{align}
+because the \(\mathbf{X}'\mathbf{X}\)'s cancel. Thus,
+\begin{equation}
+\mathbb{E}[\mathbf{Y}^{*} - \widehat {\mathbf{Y}}^{*}] = \mathbf{0}_n~~\mbox{(the $n\times 1$ vector of 0's)}.
+\label{eq:predls5}
+\end{equation}
+This zero means that the errors are \textbf{unbiased}. They may be big or small, but on average right on the nose. Unbiasedness is ok, but it is really more important to be close.
+
+Next, the covariance matrices:
+\begin{equation}
+\text{Cov}[\mathbf{Y}] = \text{Cov}[\mathbf{X}\boldsymbol{\beta}+\mathbf{e}] = \text{Cov}[\mathbf{e}] = \sigma_e^2\mathbf{I}_n~~\mbox{(the $n\times n$ identity matrix)},
+\label{eq:predls6}
+\end{equation}
+because the \(e_i\)'s are independent, hence have zero covariance, and all have variance \(\sigma^2_e\).
+Similarly,
+\begin{equation}
+\text{Cov}[\mathbf{Y}^{*}] = \sigma_e^2\mathbf{I}_n.
+\label{eq:predls7}
+\end{equation}
+Less similar,
+\begin{align}
+\text{Cov}[\widehat {\mathbf{Y}}^{*}] &= \text{Cov}[\mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\mathbf{Y}]\\
+&=\mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t \text{Cov}[\mathbf{Y}] \mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\\
+&=\mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t \sigma^2_e\mathbf{I}_n \mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\\
+&=\sigma^2_e\mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\\
+&=\sigma^2_e\mathbf{X}(\mathbf{X}^t\mathbf{X})^{-1}\mathbf{X}^t\\
+&=\sigma^2_e\mathbf{H},
+\label{eq:predls8}
+\end{align}
+the second line following from \eqref{eq:H}.
+
+Finally, for the errors, note that \(\mathbf{Y}^{*}\) and \(\widehat{\mathbf{Y}}^{*}\) are independent, because the latter depends on the training sample alone. Hence,
+\begin{align}
+\text{Cov}[\mathbf{Y}^{*} - \widehat {\mathbf{Y}}^{*}] &= \text{Cov}[\mathbf{Y}^{*}] +Cov[\widehat {\mathbf{Y}}^{*}] ~~\mbox{(notice the $+$)}\\
+&=\sigma^2_e\mathbf{I}_n+\sigma^2_e\mathbf{H}\\
+&=\sigma^2_e(\mathbf{I}_n+\mathbf{H}).
+\label{eq:predls9}
+\end{align}
+
+Now,
+\begin{align}
+n \cdot \text{ERR}_{\text{in}} &= \mathbb{E} [\|\mathbf{Y}^{*} - \widehat {\mathbf{Y}}^{*}\|^2]\\
+&=\|\mathbb{E} \mathbf{Y}^{*} - \mathbb{E} \widehat {\mathbf{Y}}^{*} \|^2+ \text{tr}(\text{Cov}[\mathbf{Y}^{*} - \widehat {\mathbf{Y}}^{*}])\\
+&=\text{tr} (\sigma^2_e(\mathbf{I}_n+\mathbf{H}))\\
+&=\sigma^2_e(n+ \text{tr}(\mathbf{H})).
+\label{eq:predls10}
+\end{align}
+The third line follows from \eqref{eq:predls9} and \eqref{eq:predls5}, and the second from the following result: for any random vector \(\mathbf{Z}\)
+\begin{align}
+\mathbb{E} [\|\mathbf{Z} \|^2] &= \mathbb{E} [Z_1^2+\cdots+Z_m^2]\\
+&= \mathbb{E}[Z_1^2]+\cdots+\mathbb{E}[Z_m^2] \\
+&= \mathbb{E}[Z_1]^2+\text{Var}[Z_1]^2+\cdots+\mathbb{E} [Z_m]^2+ \text{Var}[Z_m]^2\\
+&= \|\mathbb{E} \mathbf{Z}\|^2 + \text{tr}(\text{Cov}[\mathbf{Z}]),
+\label{eq:cov8}
+\end{align}
+where the trace of a matrix is the sum of the diagonals, which in the case of a
+covariance matrix are the variances.
+
+For the trace, recall that \(\mathbf{X}\) is \(n\times(p+1)\), so that
+\begin{align}
+\text{tr}(\mathbf{H}) &= \text{tr}(\mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}') \\
+&= \text{tr}((\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{X}) \\
+&= \text{tr}(\mathbf{I}_{p+1})=p+1.
+\label{eq:predls11}
+\end{align}
+Putting that answer in \eqref{eq:predls10} we obtain
+\begin{equation}
+\text{ERR}_{\text{in}} = \sigma^2_e + \sigma^2_e \frac{p+1}{n}.
+\label{eq:predls12}
+\end{equation}
+
+This expected in-sample error is a simple function of three quantities. We will use it as a benchmark. The goal in the rest
+of this section will be to find, if possible, predictors that have lower in-sample error.
+
+There's not much we can do about \(\sigma^2_e\),
+since it is the inherent variance of the observations. Taking a bigger training sample will decrease the error,
+as one would expect. The one part we can work with is the \(p\), that is, try to reduce \(p\) by eliminating some of the
+explanatory variables. Will that strategy work? It is the subject of the next chapter.
+
+\hypertarget{practical-issues}{%
+\section{Practical issues}\label{practical-issues}}
+
+\hypertarget{using-r}{%
+\subsection{Using R}\label{using-r}}
+
+\hypertarget{interpret-ls-coefficients}{%
+\subsection{Interpret LS coefficients}\label{interpret-ls-coefficients}}
+
+\hypertarget{handle-categorical-variables}{%
+\subsection{Handle categorical variables}\label{handle-categorical-variables}}
+
+\hypertarget{outliers-and-rank-deficiency}{%
+\subsection{Outliers and rank deficiency}\label{outliers-and-rank-deficiency}}
+
+\hypertarget{variable-selection-and-regularization}{%
+\chapter{Variable Selection and Regularization}\label{variable-selection-and-regularization}}
+
+\textbf{Notes}
+{[}\href{https://liangfgithub.github.io/Notes/lec_W3_VariableSelection.pdf}{lec\_W3\_VariableSelection.pdf}{]}
+{[}\href{https://liangfgithub.github.io/Notes/lec_W3_PCR.pdf}{lec\_W3\_PCR.pdf}{]}
+{[}\href{https://liangfgithub.github.io/Notes/lec_W3_More_on_Ridge_Lasso.pdf}{lec\_W3\_More\_on\_Ridge\_Lasso.pdf}{]}
+
+\textbf{R/Python Code}
+{[}\href{https://liangfgithub.github.io/Rcode_W3_VarSel_SubsetSelection.html}{Rcode\_W3\_VarSel\_SubsetSelection}{]}
+{[}\href{https://liangfgithub.github.io/Rcode_W3_VarSel_RidgeLasso.html}{Rcode\_W3\_VarSel\_RidgeLasso}{]}
+
+\hypertarget{subset-selection}{%
+\section{Subset selection}\label{subset-selection}}
+
+\hypertarget{ridge-regression}{%
+\section{Ridge regression}\label{ridge-regression}}
+
+\hypertarget{lasso-regression}{%
+\section{Lasso regression}\label{lasso-regression}}
+
+\hypertarget{regression-trees}{%
+\chapter{Regression Trees}\label{regression-trees}}
+
+\hypertarget{nonlinear-regression}{%
+\chapter{Nonlinear Regression}\label{nonlinear-regression}}
+
+Chapter 2 assumed that the mean of the dependent variables was a linear function of the explanatory variables. In this chapter we will consider non-linear functions. We start with just one \(x\)-variable, and consider the model
+\begin{equation}
+Y_i = f(x_i)+e_i,~~i=1,\ldots,n,
+\label{eq:smooth1}
+\end{equation}
+where the \(x_i\)'s are given, and the \(e_i\)'s are independent with mean zero and variances \(\sigma^2_e\). A linear model would have \(f(x_i)=\beta_0+\beta_1x_i\). Here, we are not constraining \(f\) to be linear, or even any parametric function. Basically, \(f\) can be any function as long as it is sufficiently \textbf{smooth}. Exactly what we mean by smooth will be detailed later.
+
+From a prediction point of view, the goal is to find an estimated function of \(f\), \(\widehat f\), so that new \(y\)'s can be predicted from new \(x\)'s by \(\widehat f(x)\). Related but not identical goals include
+
+\begin{itemize}
+\item
+  \textbf{Curve-fitting}: fit a smooth curve to the data in order to have a good summary of the data; find a curve so that the graph ``looks nice'';
+\item
+  \textbf{Interpolation}: Estimate \(y\) for values of \(x\) not among the observed, but in the same range as the observed;
+\item
+  \textbf{Extrapolation}: Estimate \(y\) for values of \(x\) outside the range of the observed \(x\)'s, a somewhat dangerous activity.
+\end{itemize}
+
+This chapter deals with \textbf{nonparametric} functions \(f\), which strictly speaking means that we are not assuming a particular form of the function based on a finite number of parameters. Examples of parametric nonlinear functions:
+\begin{equation}
+f(x) = \alpha~e^{\beta x}~~\text{and}~~f(x) =\sin(\alpha+\beta~x+\gamma x^2).
+\label{eq:smooth2}
+\end{equation}
+Such models can be fit with least squares much as the linear models, although the derivatives are not simple linear functions of the parameters, and Newton-Raphson or some other numerical method is needed.
+
+The approach we take to estimating \(f\) in the nonparametric model is to use some sort of \textbf{basis expansion} of the functions on \(\mathbb{R}\). That is, we have an infinite set of known functions, \(h_1(x), h_2(x),\ldots,\) and estimate \(f\) using a linear combination of a subset of the functions, e.g.,
+\begin{equation}
+\widehat f(x) = \widehat{\beta}_0+\widehat{\beta}_1 h_1(x) +\cdots+\widehat{\beta}_m h_m(x).
+\label{eq:smooth3}
+\end{equation}
+
+We are \textbf{not} assuming that \(f\) is a finite linear combination of the \(h_j\)'s, hence will always have a biased estimator of \(f\). Usually we \emph{do} assume that \(f\) can be arbitrarily well approximated by such a linear combination, that is, there is a sequence \(\beta_0,\beta_1,\beta_2,\ldots,\) such that
+\begin{equation}
+f(x) = \beta_0+\lim_{m\to\infty}\sum_{i=1}^m \beta_j h_j(x)
+\label{eq:smooth4}
+\end{equation}
+uniformly, at least for \(x\) in a finite range.
+
+An advantage to using estimates as in \eqref{eq:smooth3} is that the estimated function is a linear one, linear in the \(h_j\)'s, though not in the \(x\). But with \(x_i\)'s fixed, we are in the same estimation bailiwick as the linear models in Chapter 2, hence ideas such as subset selection, ridge, lasso, and estimating prediction errors carry over reasonably easily.
+
+In the next few sections, we consider possible sets of \(h_j\)'s, including polynomials and local polynomials such as cubic splines.
+
+\hypertarget{polynomials}{%
+\section{Polynomials}\label{polynomials}}
+
+The estimate of \(f\) is a polynomial in \(x\), where the challenge is to figure out the degree. In raw form, we have
+\begin{equation}
+h_1(x) = x,~h_2(x) = x^2,~h_3(x) = x^3, \ldots.
+\label{eq:poly1}
+\end{equation}
+(The Weierstrass Approximation Theorem guarantees that \eqref{eq:smooth4} holds.)
+The \(m^{th}\) degree polynomial fit is then
+\begin{equation}
+\widehat f(x) = 
+\widehat\beta_0+ \widehat\beta_1x+\widehat\beta_2x^2+\cdots+\widehat\beta_mx^m.
+\label{eq:poly2}
+\end{equation}
+It is straightforward to find the estimates \(\widehat\beta_j\) using the techniques from Chapter 2, where here
+\begin{equation}
+\mathbf{X} = \begin{pmatrix}
+1&x_1&x_1^2&\cdots&x_1^m\\
+1&x_2&x_2^2&\cdots&x_2^m\\
+\vdots&\vdots&\vdots&\ddots&\vdots\\
+1&x_N&x_N^2&\cdots&x_N^m
+\end{pmatrix}.
+\label{eq:poly3}
+\end{equation}
+
+Technically, one could perform a regular subset regression procedure, but generally one considers only fits allowing the
+first \(m\) coefficients to be nonzero, and requiring the rest to be zero. Thus the only fits considered are
+\begin{equation}
+\begin{array}{rclc}
+\widehat f(x_i) &=& \widehat{\beta}_0&\text{(constant)}\\
+\widehat f(x_i) &=& \widehat\beta_0+ \widehat\beta_1x_i&\text{(linear)}\\
+\widehat f(x_i) &=& \widehat\beta_0+ \widehat\beta_1x_i+ \widehat\beta_2x_i^2&\text{(quadratic)}\\
+&\vdots&\\
+\widehat f(x_i) &=& \widehat\beta_0+ \widehat\beta_1x_i+\widehat\beta_2x_i^2+\cdots+\widehat\beta_mx_i^m
+&\text{($m^{th}$ degree)}\\
+&\vdots&
+\end{array}
+\label{eq:poly4}
+\end{equation}
+
+We will use the birthrate data to illustrate polynomial fits. The \(x\)'s are the years from 1917 to 2003, and the
+\(y\)'s are the births per 10,000 women aged twenty-three in the
+U.S.\footnote{The data up through 1975 can be found in the Data and Story Library at
+  \url{http://lib.stat.cmu.edu/DASL/Datafiles/Birthrates.html}. See
+  Velleman, P. F. and Hoaglin, D. C. (1981). \emph{Applications, Basics, and Computing of
+  Exploratory Data Analysis}. Belmont. CA: Wadsworth, Inc.~The original data is from
+  P.K. Whelpton and A. A. Campbell, ``Fertility Tables for Birth Charts of American Women,'' Vital Statistics Special Reports 51, no. 1.
+  (Washington D.C.:Government Printing Office, 1960, years 1917-1957)
+  and National Center for Health Statistics, Vital Statistics of the United States Vol. 1, Natality (Washington D.C.:Government Printing Office, yearly, 1958-1975).
+  The data from 1976 to 2003 are actually rates for women
+  aged 20-24, found in
+  the National Vital Statistics Reports
+  Volume 54, Number 2 September 8, 2005, \emph{Births: Final Data for 2003};
+  \url{http://www.cdc.gov/nchs/data/nvsr/nvsr54/nvsr54/_02.pdf}.}
+
+Figure \ref{fig:poly-br-fig} contains the fits of several polynomials, from a cubic to an \(80^{th}\)-degree polynomial.
+It looks like the \(m=3\) and \(m=5\) fits are poor, \(m=20\) to 40 are reasonable, and \(m=80\) is overfitting, i.e., the
+curve is too jagged.
+
+\hypertarget{model-selection}{%
+\subsection{Model selection}\label{model-selection}}
+
+\hypertarget{using-r-1}{%
+\subsection{Using R}\label{using-r-1}}
+
+The \(\mathbf{X}\) matrix in \eqref{eq:poly3} is not the one to use for computations. For any high-degree polynomial, we will end up with huge numbers (e.g., \(87^{16}\approx 10^{31}\)) and small numbers in the matrix, which leads to numerical inaccuracies. A better matrix uses \emph{orthogonal polynomials}, or in fact orthonormal ones. Thus we want the columns of the \(\mathbf{X}\) matrix, except for the intercept column \(\mathbf{1}_n\), to have mean 0 and norm 1, but also to have them orthogonal to each other in such a way that the first \(m\) columns still yield the \(m^{th}\)-degree polynomials. To illustrate, without going into much detail, we use the Gram-Schmidt algorithm for \(\mathbf{x}=(1,2,3,4,5)'\) and \(m=2\). Start with the raw columns,
+\begin{equation}
+\mathbf{1}_5=\begin{pmatrix}1\\1\\1\\1\\1\end{pmatrix},
+\mathbf{x}_{[1]} = \begin{pmatrix}1\\2\\3\\4\\5\end{pmatrix},~~\text{and}~~
+\mathbf{x}_{[2]} = \begin{pmatrix}1\\4\\9\\16\\25\end{pmatrix}.
+\label{eq:poly10}
+\end{equation}
+Let the first one as is, but subtract the means (3 and 11) from each of the other two:
+\begin{equation}
+{\mathbf{x}}^{(2)}_{[1]} = \begin{pmatrix}-2\\-1\\0\\1\\2\end{pmatrix},~~\text{and}~~
+{\mathbf{x}}^{(2)}_{[2]} = \begin{pmatrix}-10\\-7\\-2\\5\\14\end{pmatrix}.
+\label{eq:poly11}
+\end{equation}
+Now leave the first two alone, and make the third orthogonal to the second by applying the main Gram-Schmidt step,
+\begin{equation}
+\mathbf{u} \to \mathbf{u} - \frac{\mathbf{u}^t \mathbf{v}}{\mathbf{v}^t\mathbf{v}} \cdot \mathbf{v},
+\label{eq:poly12}
+\end{equation}
+with \(\mathbf{v}={\mathbf{x}}^{(2)}_{[1]}\) and \(\mathbf{u}={\mathbf{x}}^{(2)}_{[2]}\):
+\begin{equation}
+\mathbf{x}_{[2]}^{[3]} = 
+\begin{pmatrix}-10\\-7\\-2\\5\\14\end{pmatrix} - \frac{60}{10}~\begin{pmatrix}-2\\-1\\0\\1\\2\end{pmatrix}
+= \begin{pmatrix}
+2\\  -1\\  -2\\ -1\\ 2\end{pmatrix}.
+\label{eq:poly13}
+\end{equation}
+To complete the picture, divide the last two \(x\)'s by their respective norms, to get
+\begin{equation}
+\mathbf{1}_5=\begin{pmatrix}1\\1\\1\\1\\1\end{pmatrix},
+\mathbf{x}^{Norm}_{[1]} = \frac{1}{\sqrt{10}}~\begin{pmatrix}-2\\-1\\0\\1\\2\end{pmatrix},~~\text{and}~~
+{\mathbf{x}}^{Norm}_{[2]} = \frac{1}{\sqrt{14}} \begin{pmatrix}-10\\-7\\-2\\5\\14\end{pmatrix}.
+\label{eq:poly14}
+\end{equation}
+You can check that indeed these three vectors are orthogonal, and the last two orthonormal.
+
+For a large \(n\) and \(m\), you would continue, at step \(k\) orthogonalizing the current \((k+1)^{st},\ldots,(m+1)^{st}\)
+vector to the current \(k^{th}\) vector. Once you have these vectors, then the fitting is easy, because the \(\mathbf{X}_m\) for
+the \(m^{th}\) degree polynomial (leaving out the \(\mathbf{1}_n\)) just uses the first \(m\) vectors, and
+\(\mathbf{X}_m^t\mathbf{X}_m=\mathbf{I}_m\), so that the estimates of beta are just \(\mathbf{X}^t_m\mathbf{y}\), and the \(\mathbf{H}_m=\mathbf{X}_m\mathbf{X}_m^t\). Using the
+saturated model, i.e., \((n-1)^{st}\)-degree, we can get all the coefficients at once,
+\begin{equation}
+\widehat{\boldsymbol{\beta}} = \mathbf{X}_{n-1}^t\mathbf{y},~~(\widehat\beta_0=\overline y).
+\label{eq:poly15}
+\end{equation}
+Then the coefficients for the \(m^{th}\) order fit are the first \(m\) elements of \(\widehat{\boldsymbol{\beta}}\). Also, the
+residual sum of squares equals the sum of squares of the left-out coefficients:
+\begin{equation}
+\text{RSS}_m = \sum_{j=m+1}^{n-1} \widehat\beta_j^2,
+\label{eq:poly16}
+\end{equation}
+from which it is easy to find the residual variances, \(\overline {err}^m\)'s, and estimated prediction errors.
+
+Unfortunately, polynomials are not very good for extrapolation. Using the two polynomial fits, we have the
+following extrapolations.
+
+\hypertarget{regression-splines}{%
+\section{Regression Splines}\label{regression-splines}}
+
+\hypertarget{smoothing-splines}{%
+\section{Smoothing Splines}\label{smoothing-splines}}
+
+\hypertarget{sinces-and-cosines}{%
+\section{Sinces and cosines}\label{sinces-and-cosines}}
+
+\hypertarget{a-glimpse-of-wavelets}{%
+\section{A glimpse of wavelets}\label{a-glimpse-of-wavelets}}
+
+\hypertarget{clustering-analysis}{%
+\chapter{Clustering Analysis}\label{clustering-analysis}}
+
+\hypertarget{latent-structure-models}{%
+\chapter{Latent Structure Models}\label{latent-structure-models}}
+
+\hypertarget{more-on-clustering}{%
+\chapter{More on Clustering}\label{more-on-clustering}}
+
+\hypertarget{distriminant-analysis}{%
+\chapter{Distriminant Analysis}\label{distriminant-analysis}}
+
+\hypertarget{logistic-regression}{%
+\chapter{Logistic Regression}\label{logistic-regression}}
+
+\hypertarget{support-vector-machines}{%
+\chapter{Support Vector Machines}\label{support-vector-machines}}
+
+\hypertarget{classification-trees-and-boosting}{%
+\chapter{Classification Trees and Boosting}\label{classification-trees-and-boosting}}
+
+\hypertarget{recommender-system}{%
+\chapter{Recommender System}\label{recommender-system}}
+
+\hypertarget{introduction-to-deep-learning}{%
+\chapter{Introduction to Deep Learning}\label{introduction-to-deep-learning}}
+
+  \bibliography{book.bib,packages.bib}
+
+\end{document}

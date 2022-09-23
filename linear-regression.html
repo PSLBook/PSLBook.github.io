@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Linear Regression | Practical Statistical Learning</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Linear Regression | Practical Statistical Learning" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Linear Regression | Practical Statistical Learning" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="John Marten and Feng Liang" />
+
+
+<meta name="date" content="2022-09-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="introduction.html"/>
+<link rel="next" href="variable-selection-and-regularization.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#introduction-to-statistical-learning"><i class="fa fa-check"></i><b>1.1</b> Introduction to Statistical Learning</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="introduction.html"><a href="introduction.html#types-of-learning-problems"><i class="fa fa-check"></i><b>1.1.1</b> Types of learning problems</a></li>
+<li class="chapter" data-level="1.1.2" data-path="introduction.html"><a href="introduction.html#challenge-of-supervised-learning"><i class="fa fa-check"></i><b>1.1.2</b> Challenge of supervised learning</a></li>
+<li class="chapter" data-level="1.1.3" data-path="introduction.html"><a href="introduction.html#curse-of-dimensionality"><i class="fa fa-check"></i><b>1.1.3</b> Curse of dimensionality</a></li>
+<li class="chapter" data-level="1.1.4" data-path="introduction.html"><a href="introduction.html#a-glimpse-of-learning-theory"><i class="fa fa-check"></i><b>1.1.4</b> A glimpse of learning theory</a></li>
+<li class="chapter" data-level="1.1.5" data-path="introduction.html"><a href="introduction.html#bias-and-variance-tradeoff"><i class="fa fa-check"></i><b>1.1.5</b> 1.5 Bias and variance tradeoff</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#least-squares-vs.-nearest-neighbors"><i class="fa fa-check"></i><b>1.2</b> Least squares vs. nearest neighbors</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="introduction.html"><a href="introduction.html#introduction-to-ls-and-knn"><i class="fa fa-check"></i><b>1.2.1</b> Introduction to LS and kNN</a></li>
+<li class="chapter" data-level="1.2.2" data-path="introduction.html"><a href="introduction.html#simulation-study-with-r"><i class="fa fa-check"></i><b>1.2.2</b> 2.2 Simulation study with R</a></li>
+<li class="chapter" data-level="1.2.3" data-path="introduction.html"><a href="introduction.html#compute-bayes-rule"><i class="fa fa-check"></i><b>1.2.3</b> 2.3 Compute Bayes rule</a></li>
+<li class="chapter" data-level="1.2.4" data-path="introduction.html"><a href="introduction.html#discussion"><i class="fa fa-check"></i><b>1.2.4</b> Discussion</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#good-predictions-squared-error-loss-and-in-sample-error"><i class="fa fa-check"></i><b>2.1</b> Good predictions: Squared error loss and in-sample error</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#matrices-and-least-squares-estimates"><i class="fa fa-check"></i><b>2.2</b> Matrices and least-squares estimates</a></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#regression-inference"><i class="fa fa-check"></i><b>2.3</b> Regression inference</a></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#prediction-using-least-squares"><i class="fa fa-check"></i><b>2.4</b> Prediction using least-squares</a></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#geometric-interpretation"><i class="fa fa-check"></i><b>2.5</b> Geometric interpretation</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="linear-regression.html"><a href="linear-regression.html#basic-concepts-in-vector-spaces"><i class="fa fa-check"></i><b>2.5.1</b> Basic concepts in vector spaces</a></li>
+<li class="chapter" data-level="2.5.2" data-path="linear-regression.html"><a href="linear-regression.html#ls-and-projection"><i class="fa fa-check"></i><b>2.5.2</b> LS and projection</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#practical-issues"><i class="fa fa-check"></i><b>2.6</b> Practical issues</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="linear-regression.html"><a href="linear-regression.html#using-r"><i class="fa fa-check"></i><b>2.6.1</b> Using R</a></li>
+<li class="chapter" data-level="2.6.2" data-path="linear-regression.html"><a href="linear-regression.html#interpret-ls-coefficients"><i class="fa fa-check"></i><b>2.6.2</b> Interpret LS coefficients</a></li>
+<li class="chapter" data-level="2.6.3" data-path="linear-regression.html"><a href="linear-regression.html#handle-categorical-variables"><i class="fa fa-check"></i><b>2.6.3</b> Handle categorical variables</a></li>
+<li class="chapter" data-level="2.6.4" data-path="linear-regression.html"><a href="linear-regression.html#outliers-and-rank-deficiency"><i class="fa fa-check"></i><b>2.6.4</b> Outliers and rank deficiency</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="variable-selection-and-regularization.html"><a href="variable-selection-and-regularization.html"><i class="fa fa-check"></i><b>3</b> Variable Selection and Regularization</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="variable-selection-and-regularization.html"><a href="variable-selection-and-regularization.html#subset-selection"><i class="fa fa-check"></i><b>3.1</b> Subset selection</a></li>
+<li class="chapter" data-level="3.2" data-path="variable-selection-and-regularization.html"><a href="variable-selection-and-regularization.html#ridge-regression"><i class="fa fa-check"></i><b>3.2</b> Ridge regression</a></li>
+<li class="chapter" data-level="3.3" data-path="variable-selection-and-regularization.html"><a href="variable-selection-and-regularization.html#lasso-regression"><i class="fa fa-check"></i><b>3.3</b> Lasso regression</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="regression-trees.html"><a href="regression-trees.html"><i class="fa fa-check"></i><b>4</b> Regression Trees</a></li>
+<li class="chapter" data-level="5" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html"><i class="fa fa-check"></i><b>5</b> Nonlinear Regression</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#polynomials"><i class="fa fa-check"></i><b>5.1</b> Polynomials</a></li>
+<li class="chapter" data-level="5.2" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#regression-splines"><i class="fa fa-check"></i><b>5.2</b> Regression Splines</a></li>
+<li class="chapter" data-level="5.3" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#smoothing-splines"><i class="fa fa-check"></i><b>5.3</b> Smoothing Splines</a></li>
+<li class="chapter" data-level="5.4" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#sinces-and-cosines"><i class="fa fa-check"></i><b>5.4</b> Sinces and cosines</a></li>
+<li class="chapter" data-level="5.5" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#a-glimpse-of-wavelets"><i class="fa fa-check"></i><b>5.5</b> A glimpse of wavelets</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="clustering-analysis.html"><a href="clustering-analysis.html"><i class="fa fa-check"></i><b>6</b> Clustering Analysis</a></li>
+<li class="chapter" data-level="7" data-path="latent-structure-models.html"><a href="latent-structure-models.html"><i class="fa fa-check"></i><b>7</b> Latent Structure Models</a></li>
+<li class="chapter" data-level="8" data-path="more-on-clustering.html"><a href="more-on-clustering.html"><i class="fa fa-check"></i><b>8</b> More on Clustering</a></li>
+<li class="chapter" data-level="9" data-path="distriminant-analysis.html"><a href="distriminant-analysis.html"><i class="fa fa-check"></i><b>9</b> Distriminant Analysis</a></li>
+<li class="chapter" data-level="10" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>10</b> Logistic Regression</a></li>
+<li class="chapter" data-level="11" data-path="support-vector-machines.html"><a href="support-vector-machines.html"><i class="fa fa-check"></i><b>11</b> Support Vector Machines</a></li>
+<li class="chapter" data-level="12" data-path="classification-trees-and-boosting.html"><a href="classification-trees-and-boosting.html"><i class="fa fa-check"></i><b>12</b> Classification Trees and Boosting</a></li>
+<li class="chapter" data-level="13" data-path="recommender-system.html"><a href="recommender-system.html"><i class="fa fa-check"></i><b>13</b> Recommender System</a></li>
+<li class="chapter" data-level="14" data-path="introduction-to-deep-learning.html"><a href="introduction-to-deep-learning.html"><i class="fa fa-check"></i><b>14</b> Introduction to Deep Learning</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Practical Statistical Learning</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="linear-regression" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Linear Regression<a href="linear-regression.html#linear-regression" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p><strong>Notes</strong>
+[<a href="https://liangfgithub.github.io/Notes/lec_W2.1_LinearRegression_MLR.pdf">lec_W2.1_LinearRegression_MLR.pdf</a>]
+[<a href="https://liangfgithub.github.io/Notes/lec_W2.2_LinearRegression_Geometry.pdf">lec_W2.2_LinearRegression_Geometry.pdf</a>]
+[<a href="https://liangfgithub.github.io/Notes/lec_W2.3_LinearRegression_Practice.pdf">lec_W2.3_LinearRegression_Practice.pdf</a>]
+[<a href="https://liangfgithub.github.io/Notes/lec_W2_appendix_SLR.pdf">lec_W2_appendix_SLR.pdf</a>]</p>
+<p><strong>R/Python Code</strong>
+[<a href="https://liangfgithub.github.io/Rcode_W2_LinearRegression.html">Rcode_W2_LinearRegression.html</a>]
+[<a href="https://liangfgithub.github.io/Python_W2_LinearRegression_1.html">Python_W2_LinearRegression_1.html</a>]
+[<a href="https://liangfgithub.github.io/Python_W2_LinearRegression_2.html">Python_W2_LinearRegression_2.html</a>]</p>
+<div id="good-predictions-squared-error-loss-and-in-sample-error" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Good predictions: Squared error loss and in-sample error<a href="linear-regression.html#good-predictions-squared-error-loss-and-in-sample-error" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="matrices-and-least-squares-estimates" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Matrices and least-squares estimates<a href="linear-regression.html#matrices-and-least-squares-estimates" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="regression-inference" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Regression inference<a href="linear-regression.html#regression-inference" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="prediction-using-least-squares" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> Prediction using least-squares<a href="linear-regression.html#prediction-using-least-squares" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="geometric-interpretation" class="section level2 hasAnchor" number="2.5">
+<h2><span class="header-section-number">2.5</span> Geometric interpretation<a href="linear-regression.html#geometric-interpretation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="basic-concepts-in-vector-spaces" class="section level3 hasAnchor" number="2.5.1">
+<h3><span class="header-section-number">2.5.1</span> Basic concepts in vector spaces<a href="linear-regression.html#basic-concepts-in-vector-spaces" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="ls-and-projection" class="section level3 hasAnchor" number="2.5.2">
+<h3><span class="header-section-number">2.5.2</span> LS and projection<a href="linear-regression.html#ls-and-projection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+</div>
+<div id="practical-issues" class="section level2 hasAnchor" number="2.6">
+<h2><span class="header-section-number">2.6</span> Practical issues<a href="linear-regression.html#practical-issues" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="using-r" class="section level3 hasAnchor" number="2.6.1">
+<h3><span class="header-section-number">2.6.1</span> Using R<a href="linear-regression.html#using-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="interpret-ls-coefficients" class="section level3 hasAnchor" number="2.6.2">
+<h3><span class="header-section-number">2.6.2</span> Interpret LS coefficients<a href="linear-regression.html#interpret-ls-coefficients" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="handle-categorical-variables" class="section level3 hasAnchor" number="2.6.3">
+<h3><span class="header-section-number">2.6.3</span> Handle categorical variables<a href="linear-regression.html#handle-categorical-variables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="outliers-and-rank-deficiency" class="section level3 hasAnchor" number="2.6.4">
+<h3><span class="header-section-number">2.6.4</span> Outliers and rank deficiency<a href="linear-regression.html#outliers-and-rank-deficiency" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="introduction.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="variable-selection-and-regularization.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/02-linear-regression.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Nonlinear Regression | Practical Statistical Learning</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Nonlinear Regression | Practical Statistical Learning" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Nonlinear Regression | Practical Statistical Learning" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="John Marden and Feng Liang" />
+
+
+<meta name="date" content="2022-09-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="regression-trees.html"/>
+<link rel="next" href="clustering-analysis.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#introduction-to-statistical-learning"><i class="fa fa-check"></i><b>1.1</b> Introduction to Statistical Learning</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="intro.html"><a href="intro.html#types-of-learning-problems"><i class="fa fa-check"></i><b>1.1.1</b> Types of learning problems</a></li>
+<li class="chapter" data-level="1.1.2" data-path="intro.html"><a href="intro.html#challenge-of-supervised-learning"><i class="fa fa-check"></i><b>1.1.2</b> Challenge of supervised learning</a></li>
+<li class="chapter" data-level="1.1.3" data-path="intro.html"><a href="intro.html#curse-of-dimensionality"><i class="fa fa-check"></i><b>1.1.3</b> Curse of dimensionality</a></li>
+<li class="chapter" data-level="1.1.4" data-path="intro.html"><a href="intro.html#a-glimpse-of-learning-theory"><i class="fa fa-check"></i><b>1.1.4</b> A glimpse of learning theory</a></li>
+<li class="chapter" data-level="1.1.5" data-path="intro.html"><a href="intro.html#bias-and-variance-tradeoff"><i class="fa fa-check"></i><b>1.1.5</b> Bias and variance tradeoff</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#least-squares-vs.-nearest-neighbors"><i class="fa fa-check"></i><b>1.2</b> Least squares vs. nearest neighbors</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="intro.html"><a href="intro.html#introduction-to-ls-and-knn"><i class="fa fa-check"></i><b>1.2.1</b> Introduction to LS and kNN</a></li>
+<li class="chapter" data-level="1.2.2" data-path="intro.html"><a href="intro.html#simulation-study-with-r"><i class="fa fa-check"></i><b>1.2.2</b> Simulation study with R</a></li>
+<li class="chapter" data-level="1.2.3" data-path="intro.html"><a href="intro.html#simulation-study-with-python"><i class="fa fa-check"></i><b>1.2.3</b> Simulation study with Python</a></li>
+<li class="chapter" data-level="1.2.4" data-path="intro.html"><a href="intro.html#compute-bayes-rule"><i class="fa fa-check"></i><b>1.2.4</b> Compute Bayes rule</a></li>
+<li class="chapter" data-level="1.2.5" data-path="intro.html"><a href="intro.html#discussion"><i class="fa fa-check"></i><b>1.2.5</b> Discussion</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#good-pred-section"><i class="fa fa-check"></i><b>2.1</b> Good predictions: Squared error loss and in-sample error</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#matrix-section"><i class="fa fa-check"></i><b>2.2</b> Matrices and least-squares estimates</a></li>
+<li class="chapter" data-level="2.3" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#regression-inference"><i class="fa fa-check"></i><b>2.3</b> Regression inference</a></li>
+<li class="chapter" data-level="2.4" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#geometric-interpretation"><i class="fa fa-check"></i><b>2.4</b> Geometric interpretation</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#basic-concepts-in-vector-spaces"><i class="fa fa-check"></i><b>2.4.1</b> Basic concepts in vector spaces</a></li>
+<li class="chapter" data-level="2.4.2" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#ls-and-projection"><i class="fa fa-check"></i><b>2.4.2</b> LS and projection</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#in-sample-prediction"><i class="fa fa-check"></i><b>2.5</b> In-sample prediction</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#practical-issues"><i class="fa fa-check"></i><b>2.6</b> Practical issues</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#using-r"><i class="fa fa-check"></i><b>2.6.1</b> Using R</a></li>
+<li class="chapter" data-level="2.6.2" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#interpret-ls-coefficients"><i class="fa fa-check"></i><b>2.6.2</b> Interpret LS coefficients</a></li>
+<li class="chapter" data-level="2.6.3" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#handle-categorical-variables"><i class="fa fa-check"></i><b>2.6.3</b> Handle categorical variables</a></li>
+<li class="chapter" data-level="2.6.4" data-path="linear-model-chapter.html"><a href="linear-model-chapter.html#outliers-and-rank-deficiency"><i class="fa fa-check"></i><b>2.6.4</b> Outliers and rank deficiency</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="variable-selection-and-regularization.html"><a href="variable-selection-and-regularization.html"><i class="fa fa-check"></i><b>3</b> Variable Selection and Regularization</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="variable-selection-and-regularization.html"><a href="variable-selection-and-regularization.html#subset-selection"><i class="fa fa-check"></i><b>3.1</b> Subset selection</a></li>
+<li class="chapter" data-level="3.2" data-path="variable-selection-and-regularization.html"><a href="variable-selection-and-regularization.html#ridge-regression"><i class="fa fa-check"></i><b>3.2</b> Ridge regression</a></li>
+<li class="chapter" data-level="3.3" data-path="variable-selection-and-regularization.html"><a href="variable-selection-and-regularization.html#lasso-regression"><i class="fa fa-check"></i><b>3.3</b> Lasso regression</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="regression-trees.html"><a href="regression-trees.html"><i class="fa fa-check"></i><b>4</b> Regression Trees</a></li>
+<li class="chapter" data-level="5" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html"><i class="fa fa-check"></i><b>5</b> Nonlinear Regression</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#polynomials"><i class="fa fa-check"></i><b>5.1</b> Polynomials</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#model-selection"><i class="fa fa-check"></i><b>5.1.1</b> Model selection</a></li>
+<li class="chapter" data-level="5.1.2" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#using-r-1"><i class="fa fa-check"></i><b>5.1.2</b> Using R</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#regression-splines"><i class="fa fa-check"></i><b>5.2</b> Regression Splines</a></li>
+<li class="chapter" data-level="5.3" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#smoothing-splines"><i class="fa fa-check"></i><b>5.3</b> Smoothing Splines</a></li>
+<li class="chapter" data-level="5.4" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#sinces-and-cosines"><i class="fa fa-check"></i><b>5.4</b> Sinces and cosines</a></li>
+<li class="chapter" data-level="5.5" data-path="nonlinear-regression.html"><a href="nonlinear-regression.html#a-glimpse-of-wavelets"><i class="fa fa-check"></i><b>5.5</b> A glimpse of wavelets</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="clustering-analysis.html"><a href="clustering-analysis.html"><i class="fa fa-check"></i><b>6</b> Clustering Analysis</a></li>
+<li class="chapter" data-level="7" data-path="latent-structure-models.html"><a href="latent-structure-models.html"><i class="fa fa-check"></i><b>7</b> Latent Structure Models</a></li>
+<li class="chapter" data-level="8" data-path="more-on-clustering.html"><a href="more-on-clustering.html"><i class="fa fa-check"></i><b>8</b> More on Clustering</a></li>
+<li class="chapter" data-level="9" data-path="distriminant-analysis.html"><a href="distriminant-analysis.html"><i class="fa fa-check"></i><b>9</b> Distriminant Analysis</a></li>
+<li class="chapter" data-level="10" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>10</b> Logistic Regression</a></li>
+<li class="chapter" data-level="11" data-path="support-vector-machines.html"><a href="support-vector-machines.html"><i class="fa fa-check"></i><b>11</b> Support Vector Machines</a></li>
+<li class="chapter" data-level="12" data-path="classification-trees-and-boosting.html"><a href="classification-trees-and-boosting.html"><i class="fa fa-check"></i><b>12</b> Classification Trees and Boosting</a></li>
+<li class="chapter" data-level="13" data-path="recommender-system.html"><a href="recommender-system.html"><i class="fa fa-check"></i><b>13</b> Recommender System</a></li>
+<li class="chapter" data-level="14" data-path="introduction-to-deep-learning.html"><a href="introduction-to-deep-learning.html"><i class="fa fa-check"></i><b>14</b> Introduction to Deep Learning</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Practical Statistical Learning</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="nonlinear-regression" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Nonlinear Regression<a href="nonlinear-regression.html#nonlinear-regression" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Chapter 2 assumed that the mean of the dependent variables was a linear function of the explanatory variables. In this chapter we will consider non-linear functions. We start with just one <span class="math inline">\(x\)</span>-variable, and consider the model
+<span class="math display" id="eq:smooth1">\[\begin{equation}
+Y_i = f(x_i)+e_i,~~i=1,\ldots,n,
+\tag{5.1}
+\end{equation}\]</span>
+where the <span class="math inline">\(x_i\)</span>’s are given, and the <span class="math inline">\(e_i\)</span>’s are independent with mean zero and variances <span class="math inline">\(\sigma^2_e\)</span>. A linear model would have <span class="math inline">\(f(x_i)=\beta_0+\beta_1x_i\)</span>. Here, we are not constraining <span class="math inline">\(f\)</span> to be linear, or even any parametric function. Basically, <span class="math inline">\(f\)</span> can be any function as long as it is sufficiently <strong>smooth</strong>. Exactly what we mean by smooth will be detailed later.</p>
+<p>From a prediction point of view, the goal is to find an estimated function of <span class="math inline">\(f\)</span>, <span class="math inline">\(\widehat f\)</span>, so that new <span class="math inline">\(y\)</span>’s can be predicted from new <span class="math inline">\(x\)</span>’s by <span class="math inline">\(\widehat f(x)\)</span>. Related but not identical goals include</p>
+<ul>
+<li><p><strong>Curve-fitting</strong>: fit a smooth curve to the data in order to have a good summary of the data; find a curve so that the graph “looks nice”;</p></li>
+<li><p><strong>Interpolation</strong>: Estimate <span class="math inline">\(y\)</span> for values of <span class="math inline">\(x\)</span> not among the observed, but in the same range as the observed;</p></li>
+<li><p><strong>Extrapolation</strong>: Estimate <span class="math inline">\(y\)</span> for values of <span class="math inline">\(x\)</span> outside the range of the observed <span class="math inline">\(x\)</span>’s, a somewhat dangerous activity.</p></li>
+</ul>
+<p>This chapter deals with <strong>nonparametric</strong> functions <span class="math inline">\(f\)</span>, which strictly speaking means that we are not assuming a particular form of the function based on a finite number of parameters. Examples of parametric nonlinear functions:
+<span class="math display" id="eq:smooth2">\[\begin{equation}
+f(x) = \alpha~e^{\beta x}~~\text{and}~~f(x) =\sin(\alpha+\beta~x+\gamma x^2).
+\tag{5.2}
+\end{equation}\]</span>
+Such models can be fit with least squares much as the linear models, although the derivatives are not simple linear functions of the parameters, and Newton-Raphson or some other numerical method is needed.</p>
+<p>The approach we take to estimating <span class="math inline">\(f\)</span> in the nonparametric model is to use some sort of <strong>basis expansion</strong> of the functions on <span class="math inline">\(\mathbb{R}\)</span>. That is, we have an infinite set of known functions, <span class="math inline">\(h_1(x), h_2(x),\ldots,\)</span> and estimate <span class="math inline">\(f\)</span> using a linear combination of a subset of the functions, e.g.,
+<span class="math display" id="eq:smooth3">\[\begin{equation}
+\widehat f(x) = \widehat{\beta}_0+\widehat{\beta}_1 h_1(x) +\cdots+\widehat{\beta}_m h_m(x).
+\tag{5.3}
+\end{equation}\]</span></p>
+<p>We are <strong>not</strong> assuming that <span class="math inline">\(f\)</span> is a finite linear combination of the <span class="math inline">\(h_j\)</span>’s, hence will always have a biased estimator of <span class="math inline">\(f\)</span>. Usually we <em>do</em> assume that <span class="math inline">\(f\)</span> can be arbitrarily well approximated by such a linear combination, that is, there is a sequence <span class="math inline">\(\beta_0,\beta_1,\beta_2,\ldots,\)</span> such that
+<span class="math display" id="eq:smooth4">\[\begin{equation}
+f(x) = \beta_0+\lim_{m\to\infty}\sum_{i=1}^m \beta_j h_j(x)
+\tag{5.4}
+\end{equation}\]</span>
+uniformly, at least for <span class="math inline">\(x\)</span> in a finite range.</p>
+<p>An advantage to using estimates as in <a href="nonlinear-regression.html#eq:smooth3">(5.3)</a> is that the estimated function is a linear one, linear in the <span class="math inline">\(h_j\)</span>’s, though not in the <span class="math inline">\(x\)</span>. But with <span class="math inline">\(x_i\)</span>’s fixed, we are in the same estimation bailiwick as the linear models in Chapter 2, hence ideas such as subset selection, ridge, lasso, and estimating prediction errors carry over reasonably easily.</p>
+<p>In the next few sections, we consider possible sets of <span class="math inline">\(h_j\)</span>’s, including polynomials and local polynomials such as cubic splines.</p>
+<div id="polynomials" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Polynomials<a href="nonlinear-regression.html#polynomials" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The estimate of <span class="math inline">\(f\)</span> is a polynomial in <span class="math inline">\(x\)</span>, where the challenge is to figure out the degree. In raw form, we have
+<span class="math display" id="eq:poly1">\[\begin{equation}
+h_1(x) = x,~h_2(x) = x^2,~h_3(x) = x^3, \ldots.
+\tag{5.5}
+\end{equation}\]</span>
+(The Weierstrass Approximation Theorem guarantees that <a href="nonlinear-regression.html#eq:smooth4">(5.4)</a> holds.)
+The <span class="math inline">\(m^{th}\)</span> degree polynomial fit is then
+<span class="math display" id="eq:poly2">\[\begin{equation}
+\widehat f(x) =
+\widehat\beta_0+ \widehat\beta_1x+\widehat\beta_2x^2+\cdots+\widehat\beta_mx^m.
+\tag{5.6}
+\end{equation}\]</span>
+It is straightforward to find the estimates <span class="math inline">\(\widehat\beta_j\)</span> using the techniques from Chapter 2, where here
+<span class="math display" id="eq:poly3">\[\begin{equation}
+\mathbf{X} = \begin{pmatrix}
+1&amp;x_1&amp;x_1^2&amp;\cdots&amp;x_1^m\\
+1&amp;x_2&amp;x_2^2&amp;\cdots&amp;x_2^m\\
+\vdots&amp;\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+1&amp;x_N&amp;x_N^2&amp;\cdots&amp;x_N^m
+\end{pmatrix}.
+\tag{5.7}
+\end{equation}\]</span></p>
+<p>Technically, one could perform a regular subset regression procedure, but generally one considers only fits allowing the
+first <span class="math inline">\(m\)</span> coefficients to be nonzero, and requiring the rest to be zero. Thus the only fits considered are
+<span class="math display" id="eq:poly4">\[\begin{equation}
+\begin{array}{rclc}
+\widehat f(x_i) &amp;=&amp; \widehat{\beta}_0&amp;\text{(constant)}\\
+\widehat f(x_i) &amp;=&amp; \widehat\beta_0+ \widehat\beta_1x_i&amp;\text{(linear)}\\
+\widehat f(x_i) &amp;=&amp; \widehat\beta_0+ \widehat\beta_1x_i+ \widehat\beta_2x_i^2&amp;\text{(quadratic)}\\
+&amp;\vdots&amp;\\
+\widehat f(x_i) &amp;=&amp; \widehat\beta_0+ \widehat\beta_1x_i+\widehat\beta_2x_i^2+\cdots+\widehat\beta_mx_i^m
+&amp;\text{($m^{th}$ degree)}\\
+&amp;\vdots&amp;
+\end{array}
+\tag{5.8}
+\end{equation}\]</span></p>
+<p>We will use the birthrate data to illustrate polynomial fits. The <span class="math inline">\(x\)</span>’s are the years from 1917 to 2003, and the
+<span class="math inline">\(y\)</span>’s are the births per 10,000 women aged twenty-three in the
+U.S.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>Figure <a href="#fig:poly-br-fig"><strong>??</strong></a> contains the fits of several polynomials, from a cubic to an <span class="math inline">\(80^{th}\)</span>-degree polynomial.
+It looks like the <span class="math inline">\(m=3\)</span> and <span class="math inline">\(m=5\)</span> fits are poor, <span class="math inline">\(m=20\)</span> to 40 are reasonable, and <span class="math inline">\(m=80\)</span> is overfitting, i.e., the
+curve is too jagged.</p>
+<div id="model-selection" class="section level3 hasAnchor" number="5.1.1">
+<h3><span class="header-section-number">5.1.1</span> Model selection<a href="nonlinear-regression.html#model-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="using-r-1" class="section level3 hasAnchor" number="5.1.2">
+<h3><span class="header-section-number">5.1.2</span> Using R<a href="nonlinear-regression.html#using-r-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The <span class="math inline">\(\mathbf{X}\)</span> matrix in <a href="nonlinear-regression.html#eq:poly3">(5.7)</a> is not the one to use for computations. For any high-degree polynomial, we will end up with huge numbers (e.g., <span class="math inline">\(87^{16}\approx 10^{31}\)</span>) and small numbers in the matrix, which leads to numerical inaccuracies. A better matrix uses <em>orthogonal polynomials</em>, or in fact orthonormal ones. Thus we want the columns of the <span class="math inline">\(\mathbf{X}\)</span> matrix, except for the intercept column <span class="math inline">\(\mathbf{1}_n\)</span>, to have mean 0 and norm 1, but also to have them orthogonal to each other in such a way that the first <span class="math inline">\(m\)</span> columns still yield the <span class="math inline">\(m^{th}\)</span>-degree polynomials. To illustrate, without going into much detail, we use the Gram-Schmidt algorithm for <span class="math inline">\(\mathbf{x}=(1,2,3,4,5)&#39;\)</span> and <span class="math inline">\(m=2\)</span>. Start with the raw columns,
+<span class="math display" id="eq:poly10">\[\begin{equation}
+\mathbf{1}_5=\begin{pmatrix}1\\1\\1\\1\\1\end{pmatrix},
+\mathbf{x}_{[1]} = \begin{pmatrix}1\\2\\3\\4\\5\end{pmatrix},~~\text{and}~~
+\mathbf{x}_{[2]} = \begin{pmatrix}1\\4\\9\\16\\25\end{pmatrix}.
+\tag{5.9}
+\end{equation}\]</span>
+Let the first one as is, but subtract the means (3 and 11) from each of the other two:
+<span class="math display" id="eq:poly11">\[\begin{equation}
+{\mathbf{x}}^{(2)}_{[1]} = \begin{pmatrix}-2\\-1\\0\\1\\2\end{pmatrix},~~\text{and}~~
+{\mathbf{x}}^{(2)}_{[2]} = \begin{pmatrix}-10\\-7\\-2\\5\\14\end{pmatrix}.
+\tag{5.10}
+\end{equation}\]</span>
+Now leave the first two alone, and make the third orthogonal to the second by applying the main Gram-Schmidt step,
+<span class="math display" id="eq:poly12">\[\begin{equation}
+\mathbf{u} \to \mathbf{u} - \frac{\mathbf{u}^t \mathbf{v}}{\mathbf{v}^t\mathbf{v}} \cdot \mathbf{v},
+\tag{5.11}
+\end{equation}\]</span>
+with <span class="math inline">\(\mathbf{v}={\mathbf{x}}^{(2)}_{[1]}\)</span> and <span class="math inline">\(\mathbf{u}={\mathbf{x}}^{(2)}_{[2]}\)</span>:
+<span class="math display" id="eq:poly13">\[\begin{equation}
+\mathbf{x}_{[2]}^{[3]} =
+\begin{pmatrix}-10\\-7\\-2\\5\\14\end{pmatrix} - \frac{60}{10}~\begin{pmatrix}-2\\-1\\0\\1\\2\end{pmatrix}
+= \begin{pmatrix}
+2\\  -1\\  -2\\ -1\\ 2\end{pmatrix}.
+\tag{5.12}
+\end{equation}\]</span>
+To complete the picture, divide the last two <span class="math inline">\(x\)</span>’s by their respective norms, to get
+<span class="math display" id="eq:poly14">\[\begin{equation}
+\mathbf{1}_5=\begin{pmatrix}1\\1\\1\\1\\1\end{pmatrix},
+\mathbf{x}^{Norm}_{[1]} = \frac{1}{\sqrt{10}}~\begin{pmatrix}-2\\-1\\0\\1\\2\end{pmatrix},~~\text{and}~~
+{\mathbf{x}}^{Norm}_{[2]} = \frac{1}{\sqrt{14}} \begin{pmatrix}-10\\-7\\-2\\5\\14\end{pmatrix}.
+\tag{5.13}
+\end{equation}\]</span>
+You can check that indeed these three vectors are orthogonal, and the last two orthonormal.</p>
+<p>For a large <span class="math inline">\(n\)</span> and <span class="math inline">\(m\)</span>, you would continue, at step <span class="math inline">\(k\)</span> orthogonalizing the current <span class="math inline">\((k+1)^{st},\ldots,(m+1)^{st}\)</span>
+vector to the current <span class="math inline">\(k^{th}\)</span> vector. Once you have these vectors, then the fitting is easy, because the <span class="math inline">\(\mathbf{X}_m\)</span> for
+the <span class="math inline">\(m^{th}\)</span> degree polynomial (leaving out the <span class="math inline">\(\mathbf{1}_n\)</span>) just uses the first <span class="math inline">\(m\)</span> vectors, and
+<span class="math inline">\(\mathbf{X}_m^t\mathbf{X}_m=\mathbf{I}_m\)</span>, so that the estimates of beta are just <span class="math inline">\(\mathbf{X}^t_m\mathbf{y}\)</span>, and the <span class="math inline">\(\mathbf{H}_m=\mathbf{X}_m\mathbf{X}_m^t\)</span>. Using the
+saturated model, i.e., <span class="math inline">\((n-1)^{st}\)</span>-degree, we can get all the coefficients at once,
+<span class="math display" id="eq:poly15">\[\begin{equation}
+\widehat{\boldsymbol{\beta}} = \mathbf{X}_{n-1}^t\mathbf{y},~~(\widehat\beta_0=\overline y).
+\tag{5.14}
+\end{equation}\]</span>
+Then the coefficients for the <span class="math inline">\(m^{th}\)</span> order fit are the first <span class="math inline">\(m\)</span> elements of <span class="math inline">\(\widehat{\boldsymbol{\beta}}\)</span>. Also, the
+residual sum of squares equals the sum of squares of the left-out coefficients:
+<span class="math display" id="eq:poly16">\[\begin{equation}
+\text{RSS}_m = \sum_{j=m+1}^{n-1} \widehat\beta_j^2,
+\tag{5.15}
+\end{equation}\]</span>
+from which it is easy to find the residual variances, <span class="math inline">\(\overline {err}^m\)</span>’s, and estimated prediction errors.</p>
+<p>Unfortunately, polynomials are not very good for extrapolation. Using the two polynomial fits, we have the
+following extrapolations.</p>
+</div>
+</div>
+<div id="regression-splines" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Regression Splines<a href="nonlinear-regression.html#regression-splines" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="smoothing-splines" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> Smoothing Splines<a href="nonlinear-regression.html#smoothing-splines" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="sinces-and-cosines" class="section level2 hasAnchor" number="5.4">
+<h2><span class="header-section-number">5.4</span> Sinces and cosines<a href="nonlinear-regression.html#sinces-and-cosines" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="a-glimpse-of-wavelets" class="section level2 hasAnchor" number="5.5">
+<h2><span class="header-section-number">5.5</span> A glimpse of wavelets<a href="nonlinear-regression.html#a-glimpse-of-wavelets" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>The data up through 1975 can be found in the Data and Story Library at
+<a href="http://lib.stat.cmu.edu/DASL/Datafiles/Birthrates.html" class="uri">http://lib.stat.cmu.edu/DASL/Datafiles/Birthrates.html</a>. See
+Velleman, P. F. and Hoaglin, D. C. (1981). <em>Applications, Basics, and Computing of
+Exploratory Data Analysis</em>. Belmont. CA: Wadsworth, Inc. The original data is from
+P.K. Whelpton and A. A. Campbell, “Fertility Tables for Birth Charts of American Women,” Vital Statistics Special Reports 51, no. 1.
+(Washington D.C.:Government Printing Office, 1960, years 1917-1957)
+and National Center for Health Statistics, Vital Statistics of the United States Vol. 1, Natality (Washington D.C.:Government Printing Office, yearly, 1958-1975).
+The data from 1976 to 2003 are actually rates for women
+aged 20-24, found in
+the National Vital Statistics Reports
+Volume 54, Number 2 September 8, 2005, <em>Births: Final Data for 2003</em>;
+<a href="http://www.cdc.gov/nchs/data/nvsr/nvsr54/nvsr54\_02.pdf" class="uri">http://www.cdc.gov/nchs/data/nvsr/nvsr54/nvsr54\_02.pdf</a>.<a href="nonlinear-regression.html#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="regression-trees.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="clustering-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/05-nonlinear-regression.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
